@@ -1,0 +1,21 @@
+# SPA routing for Apache / cPanel / shared hosting.
+# Sends every non-file request to index.html so React Router handles the route
+# (otherwise refreshing /about, /clients, etc. returns a 404).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Long-cache the fingerprinted build assets; never cache the HTML shell.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:js|css|woff2?|svg|png|jpe?g|webp|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(?:html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

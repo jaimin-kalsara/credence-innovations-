@@ -1,0 +1,314 @@
+[
+  {
+    "base": "abbyamani1",
+    "src": "/media/abbyamani1.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 184
+  },
+  {
+    "base": "abbyamani2",
+    "src": "/media/abbyamani2.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 163
+  },
+  {
+    "base": "abbydhyey",
+    "src": "/media/abbydhyey.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 114
+  },
+  {
+    "base": "abbypaul",
+    "src": "/media/abbypaul.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 305
+  },
+  {
+    "base": "anthonyabby",
+    "src": "/media/anthonyabby.jpg",
+    "w": 1600,
+    "h": 1066,
+    "orient": "landscape",
+    "kb": 145
+  },
+  {
+    "base": "aronshivanimiami",
+    "src": "/media/aronshivanimiami.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 241
+  },
+  {
+    "base": "baylenarondeep",
+    "src": "/media/baylenarondeep.jpg",
+    "w": 1600,
+    "h": 1066,
+    "orient": "landscape",
+    "kb": 156
+  },
+  {
+    "base": "beach1",
+    "src": "/media/beach1.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 318
+  },
+  {
+    "base": "briteam2",
+    "src": "/media/briteam2.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 191
+  },
+  {
+    "base": "cadepromo",
+    "src": "/media/cadepromo.jpg",
+    "w": 1800,
+    "h": 1350,
+    "orient": "landscape",
+    "kb": 297
+  },
+  {
+    "base": "credencecrew1",
+    "src": "/media/credencecrew1.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 308
+  },
+  {
+    "base": "dexterjanetabby",
+    "src": "/media/dexterjanetabby.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 191
+  },
+  {
+    "base": "dinner1",
+    "src": "/media/dinner1.jpg",
+    "w": 1600,
+    "h": 1066,
+    "orient": "landscape",
+    "kb": 125
+  },
+  {
+    "base": "ferriswheel",
+    "src": "/media/ferriswheel.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 168
+  },
+  {
+    "base": "janetabbybri",
+    "src": "/media/janetabbybri.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 177
+  },
+  {
+    "base": "janetwater",
+    "src": "/media/janetwater.jpg",
+    "w": 1066,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 121
+  },
+  {
+    "base": "laurenmitchfunny",
+    "src": "/media/laurenmitchfunny.jpg",
+    "w": 1600,
+    "h": 1066,
+    "orient": "landscape",
+    "kb": 210
+  },
+  {
+    "base": "shivanicade-1-",
+    "src": "/media/shivanicade-1-.jpg",
+    "w": 1600,
+    "h": 1066,
+    "orient": "landscape",
+    "kb": 138
+  },
+  {
+    "base": "thumbsup",
+    "src": "/media/thumbsup.jpg",
+    "w": 1200,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 164
+  },
+  {
+    "base": "whatsapp-image-2026-02-17-at-17.54.57",
+    "src": "/media/whatsapp-image-2026-02-17-at-17.54.57.jpg",
+    "w": 1206,
+    "h": 1182,
+    "orient": "square",
+    "kb": 253
+  },
+  {
+    "base": "whatsapp-image-2026-02-18-at-18.50.51",
+    "src": "/media/whatsapp-image-2026-02-18-at-18.50.51.jpg",
+    "w": 1600,
+    "h": 1199,
+    "orient": "landscape",
+    "kb": 362
+  },
+  {
+    "base": "whatsapp-image-2026-02-18-at-19.12.27",
+    "src": "/media/whatsapp-image-2026-02-18-at-19.12.27.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 175
+  },
+  {
+    "base": "whatsapp-image-2026-02-18-at-19.12.27-2-",
+    "src": "/media/whatsapp-image-2026-02-18-at-19.12.27-2-.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 183
+  },
+  {
+    "base": "whatsapp-image-2026-02-18-at-19.12.27-4-",
+    "src": "/media/whatsapp-image-2026-02-18-at-19.12.27-4-.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 222
+  },
+  {
+    "base": "whatsapp-image-2026-03-03-at-17.31.28-1-",
+    "src": "/media/whatsapp-image-2026-03-03-at-17.31.28-1-.jpg",
+    "w": 1800,
+    "h": 1350,
+    "orient": "landscape",
+    "kb": 245
+  },
+  {
+    "base": "whatsapp-image-2026-03-03-at-17.31.30",
+    "src": "/media/whatsapp-image-2026-03-03-at-17.31.30.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 409
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-12.23.19-1-",
+    "src": "/media/whatsapp-image-2026-03-04-at-12.23.19-1-.jpg",
+    "w": 1179,
+    "h": 1463,
+    "orient": "portrait",
+    "kb": 230
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-12.23.20-2-",
+    "src": "/media/whatsapp-image-2026-03-04-at-12.23.20-2-.jpg",
+    "w": 1179,
+    "h": 1557,
+    "orient": "portrait",
+    "kb": 232
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-12.23.27",
+    "src": "/media/whatsapp-image-2026-03-04-at-12.23.27.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 231
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-13.00.38",
+    "src": "/media/whatsapp-image-2026-03-04-at-13.00.38.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 346
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-13.00.44",
+    "src": "/media/whatsapp-image-2026-03-04-at-13.00.44.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 296
+  },
+  {
+    "base": "whatsapp-image-2026-03-04-at-13.00.45",
+    "src": "/media/whatsapp-image-2026-03-04-at-13.00.45.jpg",
+    "w": 1350,
+    "h": 1800,
+    "orient": "portrait",
+    "kb": 293
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.24.59",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.24.59.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 176
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.24.59-1-",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.24.59-1-.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 171
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.25.00",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.25.00.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 230
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.25.00-1-",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.25.00-1-.jpg",
+    "w": 1490,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 230
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.25.01",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.25.01.jpg",
+    "w": 1200,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 178
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.25.01-1-",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.25.01-1-.jpg",
+    "w": 1200,
+    "h": 1600,
+    "orient": "portrait",
+    "kb": 223
+  },
+  {
+    "base": "whatsapp-image-2026-03-06-at-09.25.02-1-",
+    "src": "/media/whatsapp-image-2026-03-06-at-09.25.02-1-.jpg",
+    "w": 1600,
+    "h": 1200,
+    "orient": "landscape",
+    "kb": 280
+  }
+]
