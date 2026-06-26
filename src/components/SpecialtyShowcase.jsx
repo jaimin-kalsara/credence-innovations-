@@ -12,10 +12,10 @@ import { FIELD, PEOPLE } from '../data/media';
    ============================================================ */
 
 const SPECIALTIES = [
-  { word: 'New market entry', line: 'Into a city that has never seen you.', photo: FIELD[2] },
-  { word: 'Retail activation', line: 'Trained reps, live on the store floor.', photo: FIELD[8] },
-  { word: 'Product launches', line: 'Demo and trial, right at the aisle.', photo: PEOPLE[0] },
-  { word: 'Service expansion', line: 'New regions for home, energy & telecom.', photo: FIELD[12] },
+  { word: 'Retail Activation', line: 'Trained reps on the store floor.', photo: FIELD[8] },
+  { word: 'Product Launches', line: 'Demo and trial, right at the aisle.', photo: PEOPLE[0] },
+  { word: 'New Market Entry', line: 'Break into cities you’ve never reached.', photo: FIELD[2] },
+  { word: 'Service Expansion', line: 'New regions, same proven standard.', photo: FIELD[12] },
 ];
 
 export default function SpecialtyShowcase() {
@@ -35,11 +35,11 @@ export default function SpecialtyShowcase() {
         {/* ── minimal header ── */}
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4 mb-10 md:mb-14">
           <div>
-            <FadeUp><span className="eyebrow block mb-5">Our specialty</span></FadeUp>
+            <FadeUp><span className="eyebrow block mb-5">Our services</span></FadeUp>
             <FadeUp delay={0.05}>
               <h2 className="t-display-l" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', maxWidth: '16ch' }}>
-                We open the markets{' '}
-                <span className="d-ital" style={{ color: 'var(--electric)' }}>you&apos;ve never reached.</span>
+                Four ways we get your brand{' '}
+                <span className="d-ital" style={{ color: 'var(--electric)' }}>in front of buyers.</span>
               </h2>
             </FadeUp>
           </div>

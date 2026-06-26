@@ -46,7 +46,7 @@ const SHORT = [
   { t: 'National Scale', k: 'Replication', line: 'What wins in one store, we run in hundreds.' },
 ];
 // a real, energetic photo for each stage (shown in the glass screen)
-const PHOTOS = [FIELD[8], FIELD[2], CREW[0], CREW[1]];
+const PHOTOS = [FIELD[8], FIELD[5], CREW[0], CREW[1]];
 
 // milestone anchor points inside the 1000×200 rail viewBox (gently rising = growth)
 const NODES = [
@@ -209,11 +209,40 @@ export default function RolloutScroll() {
   const glow = active >= 3 ? 'var(--ember)' : 'var(--electric)';
 
   return (
-    <div ref={wrapRef} className="relative" style={{ height: `${NODES.length * 52}vh` }}>
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
+    <div ref={wrapRef} className="relative" style={{ height: `${NODES.length * 38}vh` }}>
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center" style={{ paddingTop: 'clamp(76px, 9vh, 108px)', paddingBottom: 'clamp(36px, 5vh, 72px)' }}>
+
+        {/* premium ambient polish — decorative layers only; never touches the
+            GSAP-driven refs (rail fill, comet, nodes, blobs, pct). */}
+        <style>{`
+          .rsx-mesh { position: absolute; inset: -10%; pointer-events: none;
+            background:
+              radial-gradient(36% 34% at 22% 24%, color-mix(in srgb, var(--electric) 11%, transparent), transparent 70%),
+              radial-gradient(40% 38% at 80% 76%, color-mix(in srgb, var(--ember) 7%, transparent), transparent 72%); }
+          .rsx-grain { position: absolute; inset: 0; opacity: 0.035; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 140px 140px; }
+          .rsx-beam { position: absolute; top: -12%; height: 124%; width: 30%; pointer-events: none; opacity: 0.45; filter: blur(30px);
+            background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--electric) 8%, transparent) 45%, transparent); }
+          .rsx-beam-1 { left: 24%; transform: rotate(-13deg); }
+          .rsx-beam-2 { right: 24%; transform: rotate(13deg); }
+          .rsx-spark { position: absolute; width: 5px; height: 5px; border-radius: 50%; opacity: 0;
+            background: radial-gradient(circle, color-mix(in srgb, var(--electric) 85%, #fff), transparent 70%);
+            box-shadow: 0 0 9px color-mix(in srgb, var(--electric) 55%, transparent); }
+          .rsx-spark-1 { left: 13%; top: 30%; animation: rsx-tw 5.6s ease-in-out 0.4s infinite; }
+          .rsx-spark-2 { right: 15%; top: 22%; animation: rsx-tw 6.8s ease-in-out 1.7s infinite; }
+          .rsx-spark-3 { left: 20%; bottom: 24%; animation: rsx-tw 7.4s ease-in-out 2.6s infinite; }
+          .rsx-spark-4 { right: 22%; bottom: 30%; animation: rsx-tw 6.1s ease-in-out 1s infinite; }
+          @keyframes rsx-tw { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 0.7; transform: scale(1); } }
+          /* a soft glow on the milestone that's currently lit (GSAP only toggles .rj-on) */
+          .rj-node.rj-on .rj-core { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--ember) 85%, transparent)); }
+          .rj-node.rj-on .rj-ring { filter: drop-shadow(0 0 7px color-mix(in srgb, var(--electric) 55%, transparent)); }
+        `}</style>
 
         {/* ── ambient parallax backdrop ── */}
         <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+          <div className="rsx-mesh" />
+          <span className="rsx-beam rsx-beam-1" /><span className="rsx-beam rsx-beam-2" />
           <div ref={blob1} className="absolute rounded-full" style={{
             width: '46%', height: '64%', left: '4%', top: '6%', willChange: 'transform',
             background: 'radial-gradient(circle, color-mix(in srgb, var(--electric) 20%, transparent), transparent 65%)', filter: 'blur(70px)',
@@ -223,12 +252,15 @@ export default function RolloutScroll() {
             background: 'radial-gradient(circle, color-mix(in srgb, var(--ember) 16%, transparent), transparent 65%)', filter: 'blur(70px)',
           }} />
           <div className="absolute inset-0 dot-grid" style={{ opacity: 0.5 }} />
+          <div className="rsx-grain" />
+          <span className="rsx-spark rsx-spark-1" /><span className="rsx-spark rsx-spark-2" />
+          <span className="rsx-spark rsx-spark-3" /><span className="rsx-spark rsx-spark-4" />
         </div>
 
         <div className="shell w-full relative" style={{ zIndex: 1 }}>
 
           {/* ── header ── */}
-          <div className="flex items-center justify-between mb-6 xl:mb-9">
+          <div className="flex items-center justify-between mb-4 xl:mb-6">
             <span className="font-mono inline-flex items-center gap-2.5" style={{ fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--smoke)' }}>
               <span className="relative grid place-items-center" style={{ width: 12, height: 12 }}>
                 <motion.span className="absolute rounded-full" style={{ width: 8, height: 8, background: 'var(--ember)' }}
@@ -244,60 +276,67 @@ export default function RolloutScroll() {
           </div>
 
           {/* ── journey rail ── */}
-          <div className="relative" style={{ marginBottom: 'clamp(56px, 7vh, 84px)' }}>
-            <svg viewBox="0 0 1000 200" className="w-full" style={{ display: 'block', overflow: 'visible' }} aria-hidden="true">
-              {/* base track */}
-              <path d={RAIL_D} fill="none" stroke="var(--hair)" strokeWidth="2" strokeLinecap="round" />
-              {/* glow + crisp fill (drawn by scroll) */}
-              <path ref={glowRef} d={RAIL_D} fill="none" stroke="var(--electric)" strokeWidth="7" strokeLinecap="round" style={{ opacity: 0.4, filter: 'blur(5px)' }} />
-              <path ref={fillRef} d={RAIL_D} fill="none" stroke="var(--electric)" strokeWidth="2.5" strokeLinecap="round" />
-              {/* the source path used for comet measurement (invisible) */}
-              <path ref={pathRef} d={RAIL_D} fill="none" stroke="none" />
+          <div style={{ marginBottom: 'clamp(40px, 5vh, 64px)' }}>
+            <div className="relative">
+              <svg viewBox="0 30 1000 140" className="w-full" style={{ display: 'block', overflow: 'visible' }} aria-hidden="true">
+                {/* base track */}
+                <path d={RAIL_D} fill="none" stroke="var(--hair)" strokeWidth="2" strokeLinecap="round" />
+                {/* glow + crisp fill (drawn by scroll) */}
+                <path ref={glowRef} d={RAIL_D} fill="none" stroke="var(--electric)" strokeWidth="7" strokeLinecap="round" style={{ opacity: 0.4, filter: 'blur(5px)' }} />
+                <path ref={fillRef} d={RAIL_D} fill="none" stroke="var(--electric)" strokeWidth="2.5" strokeLinecap="round" />
+                {/* the source path used for comet measurement (invisible) */}
+                <path ref={pathRef} d={RAIL_D} fill="none" stroke="none" />
 
-              {/* comet riding the head */}
-              <g ref={cometRef} style={{ opacity: 0 }}>
-                <circle r="16" fill="var(--electric)" style={{ opacity: 0.18, filter: 'blur(6px)' }} />
-                <circle r="7" fill="var(--ember)" />
-                <circle r="3" fill="#fff" style={{ opacity: 0.92 }} />
-              </g>
-
-              {/* milestone nodes */}
-              {NODES.map((n, i) => (
-                <g key={i} className="rj-node" ref={(el) => (nodeRefs.current[i] = el)}>
-                  <circle className="rj-pulse" cx={n.x} cy={n.y} r="12" fill="none" stroke="var(--ember)" strokeWidth="1.4" />
-                  <circle className="rj-ring" cx={n.x} cy={n.y} r="11" fill="var(--ink)" stroke="var(--electric)" strokeWidth="2" />
-                  <circle className="rj-core" cx={n.x} cy={n.y} r="4" fill="var(--electric)" />
+                {/* comet riding the head */}
+                <g ref={cometRef} style={{ opacity: 0 }}>
+                  <circle r="16" fill="var(--electric)" style={{ opacity: 0.18, filter: 'blur(6px)' }} />
+                  <circle r="7" fill="var(--ember)" />
+                  <circle r="3" fill="#fff" style={{ opacity: 0.92 }} />
                 </g>
-              ))}
-            </svg>
 
-            {/* node labels (crisp HTML, aligned to node x%) */}
-            {NODES.map((n, i) => {
-              const on = i === active;
-              return (
-                <button
-                  key={i}
-                  onClick={() => jumpTo(i)}
-                  data-cursor="expand"
-                  aria-label={`Go to stage ${i + 1}: ${SHORT[i].t}`}
-                  className="absolute text-center"
-                  style={{
-                    left: `${n.x / 10}%`, top: '100%', transform: 'translate(-50%, 14px)',
-                    width: 132, cursor: 'pointer', background: 'none', border: 'none',
-                  }}
-                >
-                  <span className="font-mono block" style={{ fontSize: 10, letterSpacing: '0.16em', color: on ? 'var(--ember)' : 'var(--smoke)', transition: 'color .4s ease' }}>
-                    {STAGES[i].n}
-                  </span>
-                  <span className="block mt-1" style={{
-                    fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(13px, 1vw, 16px)', lineHeight: 1.1,
-                    color: on ? 'var(--electric)' : 'var(--bone)', opacity: on ? 1 : 0.5, transition: 'color .4s ease, opacity .4s ease',
-                  }}>
-                    {SHORT[i].t}
-                  </span>
-                </button>
-              );
-            })}
+                {/* milestone nodes */}
+                {NODES.map((n, i) => (
+                  <g key={i} className="rj-node" ref={(el) => (nodeRefs.current[i] = el)}>
+                    <circle className="rj-pulse" cx={n.x} cy={n.y} r="12" fill="none" stroke="var(--ember)" strokeWidth="1.4" />
+                    <circle className="rj-ring" cx={n.x} cy={n.y} r="11" fill="var(--ink)" stroke="var(--electric)" strokeWidth="2" />
+                    <circle className="rj-core" cx={n.x} cy={n.y} r="4" fill="var(--electric)" />
+                  </g>
+                ))}
+              </svg>
+
+              {/* node labels — each pinned DIRECTLY below its own rj-ring node, so a
+                  label tracks its node's height along the rising curve (top = the
+                  node's y mapped into the 0 30 1000 140 viewBox, dropped just under
+                  the ring). Same short offset for all four → consistent + tidy. */}
+              {NODES.map((n, i) => {
+                const on = i === active;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => jumpTo(i)}
+                    data-cursor="expand"
+                    aria-label={`Go to stage ${i + 1}: ${SHORT[i].t}`}
+                    className="absolute text-center"
+                    style={{
+                      left: `${n.x / 10}%`,
+                      top: `${((n.y - 30) / 140) * 100}%`,
+                      transform: 'translate(-50%, 22px)',
+                      width: 132, cursor: 'pointer', background: 'none', border: 'none',
+                    }}
+                  >
+                    <span className="font-mono block" style={{ fontSize: 10, letterSpacing: '0.16em', color: on ? 'var(--ember)' : 'var(--smoke)', transition: 'color .4s ease' }}>
+                      {STAGES[i].n}
+                    </span>
+                    <span className="block mt-1" style={{
+                      fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(13px, 1vw, 16px)', lineHeight: 1.1,
+                      color: on ? 'var(--electric)' : 'var(--bone)', opacity: on ? 1 : 0.55, transition: 'color .4s ease, opacity .4s ease',
+                    }}>
+                      {SHORT[i].t}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* ── theater : text + self-building scene ── */}
@@ -376,7 +415,7 @@ export default function RolloutScroll() {
               ))}
 
               {/* theater — perspective stage for the floating screen */}
-              <div className="relative flex items-center justify-center" style={{ minHeight: 'clamp(330px, 44vh, 460px)', zIndex: 2, padding: 'clamp(26px, 3.4vw, 48px)', perspective: '1200px' }}>
+              <div className="relative flex items-center justify-center" style={{ minHeight: 'clamp(250px, 30vh, 350px)', zIndex: 2, padding: 'clamp(18px, 2.4vw, 34px)', perspective: '1200px' }}>
 
                 {/* depth echo panel behind the screen */}
                 <div aria-hidden="true" className="absolute rounded-2xl" style={{

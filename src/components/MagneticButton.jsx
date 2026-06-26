@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function MagneticButton({ children, to, href, onClick, variant = 'solid', className = '', type, disabled = false }) {
+export default function MagneticButton({ children, to, href, target, rel, onClick, variant = 'solid', className = '', type, disabled = false }) {
   const ref = useRef(null);
 
   const handleMove = (e) => {
@@ -23,7 +23,7 @@ export default function MagneticButton({ children, to, href, onClick, variant = 
   const inner = (
     <>
       {children}
-      <span style={{ display: 'inline-block', transition: 'transform 0.3s' }} className="arrow">→</span>
+      <span className="arrow material-symbols-rounded" aria-hidden="true" style={{ transition: 'transform 0.3s' }}>arrow_forward</span>
     </>
   );
 
@@ -36,7 +36,16 @@ export default function MagneticButton({ children, to, href, onClick, variant = 
   }
   if (href) {
     return (
-      <a ref={ref} href={href} className={cls} style={style} onMouseMove={handleMove} onMouseLeave={handleLeave}>
+      <a
+        ref={ref}
+        href={href}
+        target={target}
+        rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)}
+        className={cls}
+        style={style}
+        onMouseMove={handleMove}
+        onMouseLeave={handleLeave}
+      >
         {inner}
       </a>
     );

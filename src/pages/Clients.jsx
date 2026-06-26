@@ -7,7 +7,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { FadeUp, SplitText } from '../components/AnimatedSection';
 import Odometer from '../components/Odometer';
 import DrawUnderline from '../components/DrawUnderline';
-import EditorialFigure from '../components/EditorialFigure';
 import MagneticButton from '../components/MagneticButton';
 import StampBadge from '../components/StampBadge';
 import Scribble from '../components/Scribble';
@@ -17,7 +16,8 @@ import ScrollReveal from '../components/ScrollReveal';
 import PressMarquee from '../components/PressMarquee';
 import FolderTabDivider from '../components/FolderTabDivider';
 import PartnerForm from '../components/PartnerForm';
-import { RETAILERS } from '../components/Wordmark';
+import { RETAILER_LOGOS, logoFor } from '../data/logos';
+import BrandLogo from '../components/BrandLogo';
 import { CREW } from '../data/media';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -46,14 +46,6 @@ const brands = [
     body: 'Energy is sold on confidence. Our reps have the conversation a hundred times before launch day — so customers say yes to a name they just met.',
     stat: 'National coverage',
     index: 2,
-  },
-  {
-    name: 'Community Charity',
-    sector: 'Nonprofit',
-    line: 'Turning store foot traffic into recurring, loyal donors.',
-    body: 'Cause activation that respects the brand and the shopper — converting a passing moment into long-term support for the mission.',
-    stat: 'Cause activation',
-    index: 3,
   },
 ];
 
@@ -137,13 +129,12 @@ function BrandGallery() {
         {brands.map((b) => (
           <div
             key={b.name}
-            className="w-full lg:w-screen lg:h-screen flex-shrink-0 grid lg:grid-cols-2 items-stretch border-t lg:border-t-0 lg:border-l"
-            style={{ borderColor: 'var(--divider)' }}
+            className="w-full lg:w-auto lg:h-screen flex-shrink-0 flex items-center border-t lg:border-t-0 lg:border-l"
+            style={{ borderColor: 'var(--divider)', background: 'var(--graphite)' }}
           >
-            {/* text side */}
             <div
-              className="relative flex flex-col justify-center px-6 md:px-12 lg:px-16 py-12 lg:py-0"
-              style={{ background: 'var(--graphite)' }}
+              className="relative flex flex-col justify-center px-6 md:px-14 lg:px-24 py-14 lg:py-0"
+              style={{ maxWidth: 'min(92vw, 620px)' }}
             >
               <span
                 className="font-mono text-[10px] tracking-widest uppercase mb-5"
@@ -151,6 +142,7 @@ function BrandGallery() {
               >
                 {b.sector}
               </span>
+              {logoFor(b.name) && <BrandLogo name={b.name} height={26} fallback="hide" style={{ marginBottom: 20 }} />}
               <h3
                 className="d-caps mb-5"
                 style={{
@@ -187,17 +179,6 @@ function BrandGallery() {
               </div>
             </div>
 
-            {/* figure side */}
-            <div className="relative min-h-[44vh] lg:min-h-0 lg:h-screen">
-              <EditorialFigure
-                label={`${b.name} · ${b.sector}`}
-                aspect="auto"
-                index={b.index}
-                duotone
-                className="h-full"
-                style={{ height: '100%' }}
-              />
-            </div>
           </div>
         ))}
       </div>
@@ -210,6 +191,7 @@ const NETWORK = [
   { name: 'Walmart', value: '4,600+', unit: 'stores', note: 'The highest-traffic floor in America.' },
   { name: 'Target', value: '1,900+', unit: 'stores', note: 'Reaching the design-conscious shopper.' },
   { name: 'Costco', value: '600+', unit: 'warehouses', note: 'High-intent buyers, high basket value.' },
+  { name: "Sam's Club", value: '600+', unit: 'clubs', note: 'Membership warehouse buyers, ready for the big basket.' },
   { name: "Lowe's", value: '1,700+', unit: 'stores', note: 'The homeowner at the moment of need.' },
   { name: "BJ's", value: '240+', unit: 'clubs', note: 'Loyal value-club members across the East Coast.' },
 ];
@@ -224,7 +206,7 @@ function RetailerNetwork() {
             <FadeUp><span className="eyebrow block mb-5">The retail network</span></FadeUp>
             <FadeUp delay={0.05}>
               <h2 className="t-display-l" style={{ color: 'var(--bone)', fontFamily: 'var(--font-display)' }}>
-                <span className="d-caps">Five retailers.</span>{' '}
+                <span className="d-caps">Six retailers.</span>{' '}
                 <span className="d-ital" style={{ color: 'var(--electric)' }}>
                   Ninety-nine percent of the{' '}
                   <DrawUnderline color="var(--ember)">country</DrawUnderline>.
@@ -260,12 +242,15 @@ function RetailerNetwork() {
           {NETWORK.map((r, i) => (
             <FadeUp key={r.name} delay={i * 0.05}>
               <div
-                className="ed-row group grid gap-x-6 gap-y-2 py-6 md:py-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-baseline"
+                className="ed-row group grid gap-x-6 gap-y-2 py-6 md:py-8 md:grid-cols-[minmax(0,0.98fr)_minmax(0,0.78fr)_minmax(0,1.04fr)] md:items-baseline"
                 style={{ borderTop: '1px solid var(--hair)' }}
               >
-                <h3 className="ed-row-title" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', fontSize: 'clamp(26px, 3.2vw, 42px)', lineHeight: 1, margin: 0 }}>
-                  {r.name}
-                </h3>
+                <div className="flex items-center gap-3 min-w-0">
+                  {logoFor(r.name) && <BrandLogo name={r.name} height={20} className="brand-plate--sm" fallback="hide" />}
+                  <h3 className="ed-row-title" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', fontSize: 'clamp(26px, 3.2vw, 42px)', lineHeight: 1, margin: 0, whiteSpace: 'nowrap' }}>
+                    {r.name}
+                  </h3>
+                </div>
                 <div className="flex items-baseline gap-2">
                   <span className="stat-num" style={{ fontSize: 'clamp(26px, 3.4vw, 44px)' }}><Odometer value={r.value} /></span>
                   <span className="font-mono text-[11px] tracking-[0.12em] uppercase" style={{ color: 'var(--smoke)' }}>{r.unit}</span>
@@ -420,7 +405,7 @@ export default function Clients() {
       </PageHero>
 
       {/* retailer ticker */}
-      <PressMarquee label="Where we operate" items={RETAILERS} speed={30} />
+      <PressMarquee label="Where we operate" items={RETAILER_LOGOS} speed={30} />
 
       <FolderTabDivider label="The portfolio" tone="electric" fill="var(--ink)" />
       <BrandGallery />

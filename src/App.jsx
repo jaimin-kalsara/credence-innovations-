@@ -14,6 +14,8 @@ const About = lazy(() => import('./pages/About'));
 const Team = lazy(() => import('./pages/Team'));
 const TeamMember = lazy(() => import('./pages/TeamMember'));
 const Careers = lazy(() => import('./pages/Careers'));
+const RoleDetail = lazy(() => import('./pages/RoleDetail'));
+const Apply = lazy(() => import('./pages/Apply'));
 const Contact = lazy(() => import('./pages/Contact'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsConditions = lazy(() => import('./pages/TermsConditions'));
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/team" element={<Team />} />
             <Route path="/team/:slug" element={<TeamMember />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/careers/:slug" element={<RoleDetail />} />
+            <Route path="/apply" element={<Apply />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-and-conditions" element={<TermsConditions />} />

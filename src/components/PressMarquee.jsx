@@ -1,7 +1,13 @@
+import BrandLogo from './BrandLogo';
+
 /* Archetype G — infinite brand/logo ticker.
-   A quiet mono label sits at the left of a band; the names scroll as an
+   A quiet mono label sits at the left of a band; the brands scroll as an
    edge-masked CSS marquee. This is the ONE allowed perpetual loop (a pure
    CSS ticker via .marquee-track / @keyframes marquee in index.css).
+
+   Items may be plain strings (rendered as display-type names) OR
+   { name, logo } objects (rendered as <BrandLogo> plates) — so the same
+   ticker works as a name strip or a real logo wall.
 
    Accessibility: the scrolling strip is aria-hidden and duplicated for the
    seamless loop; a real, visually-hidden <ul> carries the names for AT.
@@ -20,6 +26,8 @@ const srOnly = {
   whiteSpace: 'nowrap',
   border: 0,
 };
+
+const nameOf = (it) => (it && typeof it === 'object' ? it.name : it);
 
 export default function PressMarquee({
   label = 'Brands we represent',
@@ -66,37 +74,51 @@ export default function PressMarquee({
               className="marquee-track"
               style={{ animationDuration: `${speed}s`, alignItems: 'center' }}
             >
-              {doubled.map((item, i) => (
-                <span
-                  key={i}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.9em',
-                    paddingInline: '1.4rem',
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(1.05rem, 1.6vw, 1.45rem)',
-                    fontWeight: 600,
-                    lineHeight: 1,
-                    color: 'var(--bone)',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {item}
-                  {/* separator dot in the brand accent */}
+              {doubled.map((item, i) => {
+                const isObj = item && typeof item === 'object';
+                return (
                   <span
-                    aria-hidden="true"
+                    key={i}
                     style={{
-                      display: 'inline-block',
-                      width: '5px',
-                      height: '5px',
-                      borderRadius: '50%',
-                      background: 'var(--electric)',
-                      opacity: 0.7,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.9em',
+                      paddingInline: isObj ? '0.7rem' : '1.4rem',
                     }}
-                  />
-                </span>
-              ))}
+                  >
+                    {isObj ? (
+                      <BrandLogo name={item.name} logo={item.logo} height={26} className="brand-plate--sm" />
+                    ) : (
+                      <>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-display)',
+                            fontSize: 'clamp(1.05rem, 1.6vw, 1.45rem)',
+                            fontWeight: 600,
+                            lineHeight: 1,
+                            color: 'var(--bone)',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {item}
+                        </span>
+                        {/* separator dot in the brand accent */}
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            display: 'inline-block',
+                            width: '5px',
+                            height: '5px',
+                            borderRadius: '50%',
+                            background: 'var(--electric)',
+                            opacity: 0.7,
+                          }}
+                        />
+                      </>
+                    )}
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -104,7 +126,7 @@ export default function PressMarquee({
         {/* Real, accessible list of the names (visually hidden). */}
         <ul style={srOnly}>
           {items.map((item, i) => (
-            <li key={i}>{item}</li>
+            <li key={i}>{nameOf(item)}</li>
           ))}
         </ul>
       </div>

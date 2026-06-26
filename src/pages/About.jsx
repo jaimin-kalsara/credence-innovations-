@@ -1,104 +1,25 @@
 import PageHero from '../components/PageHero';
 import SectionHeading from '../components/SectionHeading';
 import { FadeUp } from '../components/AnimatedSection';
-import FeatureRow from '../components/FeatureRow';
-import EditorialFigure from '../components/EditorialFigure';
+import FounderSpotlight from '../components/FounderSpotlight';
+import FounderFilm from '../components/FounderFilm';
+import AboutArticle from '../components/AboutArticle';
 import ImageStoryTimeline from '../components/ImageStoryTimeline';
 import Odometer from '../components/Odometer';
 import StampBadge from '../components/StampBadge';
 import FolderTabDivider from '../components/FolderTabDivider';
-import DrawUnderline from '../components/DrawUnderline';
 import MagneticButton from '../components/MagneticButton';
 import ScrollReveal from '../components/ScrollReveal';
 import { CREW, CULTURE, FIELD, RECOGNITION } from '../data/media';
 
-/* ===== Founder (CREAM · FeatureRow, text right) ===== */
-function Founder() {
-  return (
-    /* Whole founder feature-row slides in from the left as you scroll.
-       FeatureRow owns its own internal two-column grid (text via FadeUp /
-       visual via ClipReveal), so we wrap the row as one block and keep its
-       paper className on the ScrollReveal. */
-    <ScrollReveal from="left" distance={120} className="paper">
-      <FeatureRow
-        side="right"
-        eyebrow="The founder"
-        heading={
-          <h2 className="t-display-l" style={{ color: 'var(--bone)', margin: 0 }}>
-            <span className="d-caps">A decade on the floor,</span>{' '}
-            <span className="d-ital" style={{ color: 'var(--electric)' }}>
-              distilled into one{' '}
-              <DrawUnderline color="var(--electric)">playbook</DrawUnderline>.
-            </span>
-          </h2>
-        }
-        body="A communications graduate from Eastern Kentucky University, Abby Caudill has spent nearly ten years running face-to-face retail campaigns across telecom, home services, energy, and consumer electronics."
-        extra={
-          <>
-            <p className="body-lg measure" style={{ color: 'var(--smoke)' }}>
-              She built Credence Innovations on a single belief: send customers the team you'd want representing your own name.
-            </p>
-            <blockquote
-              className="d-ital"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontStyle: 'italic',
-                fontSize: 'clamp(24px, 3vw, 34px)',
-                lineHeight: 1.15,
-                color: 'var(--bone)',
-                borderLeft: '2px solid var(--electric)',
-                paddingLeft: 24,
-                margin: '32px 0 0',
-              }}
-            >
-              "Build the team you'd send to your own customers."
-              <footer
-                style={{
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11,
-                  letterSpacing: '0.16em',
-                  textTransform: 'uppercase',
-                  color: 'var(--smoke)',
-                  fontStyle: 'normal',
-                  marginTop: 16,
-                }}
-              >
-                — Abby Caudill, Founder
-              </footer>
-            </blockquote>
-          </>
-        }
-        visual={
-          <EditorialFigure
-            src="/team/abby-caudill.png"
-            label="Founder · Abby Caudill"
-            aspect="4/5"
-            index={1}
-          />
-        }
-        stamp={
-          <StampBadge
-            topText="NINE YEARS"
-            bottomText="ZERO FAILED"
-            center="EST '16"
-            color="var(--ember)"
-            size={108}
-            rotate={-9}
-          />
-        }
-      />
-    </ScrollReveal>
-  );
-}
-
 /* ===== Timeline (ACCENT ISLAND · ScrubTimeline) ===== */
 const milestones = [
-  { marker: '2016', heading: 'The first floor', body: 'Credence Innovations opens with a single retail campaign and a belief in face-to-face selling.', imageIndex: 0, src: '' },
-  { marker: '2018', heading: 'First national client', body: 'A Fortune 500 telecom brand signs on. The model proves it travels.', imageIndex: 1, src: '' },
-  { marker: '2020', heading: 'Five-retailer access', body: "Operating partnerships across Walmart, Target, Costco, Lowe's, and BJ's.", imageIndex: 2, src: '' },
-  { marker: '2022', heading: 'Owner of the Year', body: 'Industry recognition for performance, culture, and consistency.', imageIndex: 3, src: '' },
-  { marker: '2025', heading: 'National Consultant', body: 'Three rookie owners developed in a single year. The bench gets deeper.', imageIndex: 4, src: '' },
-  { marker: 'Today', heading: '40+ cities, one standard', body: '211 campaigns, 450+ representatives, 99% population reach, and still growing.', imageIndex: 0, src: '' },
+  { marker: '2016', heading: 'The first floor', body: 'Credence Innovations opens with a single retail campaign and a belief in face-to-face selling.', src: '/media/briteam2.jpg' },
+  { marker: '2018', heading: 'First national client', body: 'A Fortune 500 telecom brand signs on. The model proves it travels.', src: '/media/whatsapp-image-2026-03-03-at-17.31.28-1-.jpg' },
+  { marker: '2020', heading: 'Five-retailer access', body: "Operating partnerships across Walmart, Target, Costco, Lowe's, and BJ's.", src: '/media/whatsapp-image-2026-03-04-at-13.00.38.jpg' },
+  { marker: '2022', heading: 'Owner of the Year', body: 'Industry recognition for performance, culture, and consistency.', src: '/media/cadepromo.jpg' },
+  { marker: '2025', heading: 'National Consultant', body: 'Three rookie owners developed in a single year. The bench gets deeper.', src: '/media/whatsapp-image-2026-03-06-at-09.25.01-1-.jpg' },
+  { marker: 'Today', heading: '40+ cities, one standard', body: '211 campaigns, 450+ representatives, 99% population reach, and still growing.', src: '/media/whatsapp-image-2026-03-06-at-09.25.00-1-.jpg' },
 ];
 
 function Timeline() {
@@ -116,7 +37,7 @@ function Timeline() {
           />
         </ScrollReveal>
         <div style={{ marginTop: 'clamp(40px, 5vw, 64px)' }}>
-          <ImageStoryTimeline items={milestones} />
+          <ImageStoryTimeline items={milestones} mobileScroll />
         </div>
       </div>
     </section>
@@ -246,7 +167,7 @@ function TeamCulture() {
           />
         </ScrollReveal>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-6 mt-10 md:mt-12">
+        <div className="row-scroll grid sm:grid-cols-2 md:grid-cols-3 gap-5 lg:gap-6 mt-10 md:mt-12">
           {CULTURE_TILES.map((c, i) => (
             <ScrollReveal key={c.title} from={['left', 'up', 'right'][i % 3]} distance={110}>
               <article
@@ -308,7 +229,7 @@ function Highlights() {
           />
         </ScrollReveal>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mt-10 md:mt-12">
+        <div className="row-scroll grid sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6 mt-10 md:mt-12">
           {HIGHLIGHTS.map((h, i) => (
             <ScrollReveal key={h.title} from={['left', 'up', 'up', 'right'][i] || 'up'} distance={100}>
               <article className="paper-card group h-full overflow-hidden flex flex-col" style={{ borderRadius: 18, padding: 0 }}>
@@ -432,17 +353,20 @@ export default function About() {
           />
         }
       />
-      <Founder />
+      <FounderSpotlight />
       <FolderTabDivider label="The story" tone="electric" fill="var(--ink)" />
       <Timeline />
+      <FounderFilm />
+      <FolderTabDivider label="Our purpose" tone="electric" fill="var(--ink)" />
+      <AboutArticle />
       <FolderTabDivider label="Recognition" tone="ember" fill="var(--ink)" />
       <Awards />
       <FolderTabDivider label="Team culture" tone="electric" fill="var(--ink)" />
       <TeamCulture />
-      <FolderTabDivider label="Highlights" tone="ember" fill="var(--ink)" />
-      <Highlights />
       <FolderTabDivider label="The story is still being written" tone="electric" fill="var(--ink)" />
       <Close />
+      <FolderTabDivider label="Highlights" tone="ember" fill="var(--ink)" />
+      <Highlights />
     </>
   );
 }

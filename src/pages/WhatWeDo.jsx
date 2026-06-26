@@ -1,8 +1,7 @@
-import { FadeUp, StaggerChildren, StaggerItem } from '../components/AnimatedSection';
+import { FadeUp } from '../components/AnimatedSection';
 import PageHero from '../components/PageHero';
 import SectionHeading from '../components/SectionHeading';
-import RolloutScroll from '../components/RolloutScroll';
-import EditorialRows from '../components/EditorialRows';
+import WorkflowJourney from '../components/WorkflowJourney';
 import MagneticButton from '../components/MagneticButton';
 import ImageStoryTimeline from '../components/ImageStoryTimeline';
 import Scribble from '../components/Scribble';
@@ -64,7 +63,7 @@ function DiffRow({ them, us, i }) {
 
 function Difference() {
   return (
-    <section data-theme="dark" className="paper relative overflow-hidden pad-lg" style={{ background: 'var(--ink)' }}>
+    <section data-theme="dark" className="paper relative overflow-hidden pad-md" style={{ background: 'var(--ink)' }}>
       <div className="shell grid lg:grid-cols-[0.95fr_1.05fr] gap-12 lg:gap-20 items-center">
         {/* intro column — slides in from the left */}
         <ScrollReveal from="left" distance={120}>
@@ -104,60 +103,26 @@ function Difference() {
   );
 }
 
-/* ===== Capabilities (CREAM) — non-uniform 6-up paper-card grid ===== */
-const CAPS = [
-  { title: 'Retail Activation', body: "Trained brand reps on the floor inside Walmart, Target, Costco, Lowe's, and BJ's.", tilt: -1.4 },
-  { title: 'Product Launch', body: 'Education, demo, and trial at the precise moment a customer walks the aisle.', tilt: 1.1 },
-  { title: 'National Rollout', body: 'From one store to hundreds — same standard, same brand experience, every market.', tilt: -0.8, accent: true },
-  { title: 'Custom Training', body: 'Every rep is built on your product, your voice, your customer before launch day.', tilt: 1.4 },
-  { title: 'Market Entry', body: 'Breaking unknown brands into saturated markets through trusted retail floors.', tilt: -1.1 },
-  { title: 'Brand Protection', body: 'Reps who sound like they have worked for you for years — never outsourced.', tilt: 0.9 },
-];
-
-function Capabilities() {
-  return (
-    <section className="pad-md paper">
-      <div className="shell">
-        <SectionHeading
-          eyebrow="Capabilities"
-          title="Everything we do happens"
-          titleItalic="face-to-face."
-          align="center"
-          maxWidth={780}
-        />
-        <div className="mt-6 md:mt-10">
-          <EditorialRows items={CAPS.map((c) => ({ title: c.title, body: c.body }))} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ===== The model (ACCENT island) — deep-dive four-stage rollout ===== */
 function Model() {
+  // Same design as the Home "How we work" section (WorkflowJourney), reframed
+  // for this page via props — the home section itself is left untouched.
   return (
-    <section className="island-accent relative">
-      <div className="shell pad-md" style={{ paddingBottom: 0 }}>
-        <SectionHeading
-          eyebrow="The four-stage model"
-          title="From a single store to every state —"
-          titleItalic="without losing the standard."
-          subhead="The proven rollout we run for every brand, every sector. Scroll to walk through it."
-          maxWidth={900}
-        />
-      </div>
-      {/* RolloutScroll — the pinned, scroll-scrubbed stepper (same four stages as Home) */}
-      <RolloutScroll />
-    </section>
+    <WorkflowJourney
+      eyebrow="The four-stage model"
+      headline={[{ t: 'From a single store' }, { t: 'to every state —' }, { t: 'without losing the standard.', hi: true }]}
+      subhead="The proven rollout we run for every brand, every sector — from a single store floor to a nationwide network."
+      cta={{ label: 'See the work', to: '/clients' }}
+    />
   );
 }
 
 /* ===== Process (CREAM) — scroll-scrubbed timeline of the 4 steps ===== */
 const PROCESS_STEPS = [
-  { marker: '01', heading: 'Discovery', body: 'We learn your product, your margins, and the customer you want to win.', imageIndex: 0 },
-  { marker: '02', heading: 'Custom training', body: 'Reps are trained on your voice until the pitch is second nature.', imageIndex: 1 },
-  { marker: '03', heading: 'Pilot launch', body: 'We go live in a target market and measure conversion from day one.', imageIndex: 2 },
-  { marker: '04', heading: 'Scale', body: 'What converts gets replicated, market by market, coast to coast.', imageIndex: 3 },
+  { marker: '01', heading: 'Discovery', body: 'We learn your product, your margins, and the customer you want to win.', src: '/media/shivanicade-1-.jpg' },
+  { marker: '02', heading: 'Custom training', body: 'Reps are trained on your voice until the pitch is second nature.', src: '/media/whatsapp-image-2026-03-06-at-09.24.59-1-.jpg' },
+  { marker: '03', heading: 'Pilot launch', body: 'We go live in a target market and measure conversion from day one.', src: '/media/whatsapp-image-2026-02-18-at-18.50.51.jpg' },
+  { marker: '04', heading: 'Scale', body: 'What converts gets replicated, market by market, coast to coast.', src: '/media/whatsapp-image-2026-02-18-at-19.12.27-4-.jpg' },
 ];
 
 function Process() {
@@ -221,7 +186,6 @@ export default function WhatWeDo() {
       />
       <FolderTabDivider label="The difference" tone="electric" fill="var(--ink)" />
       <Difference />
-      <Capabilities />
       <FolderTabDivider label="The four-stage model" tone="electric" fill="color-mix(in srgb, var(--electric) 6%, var(--ink))" />
       <Model />
       <Process />

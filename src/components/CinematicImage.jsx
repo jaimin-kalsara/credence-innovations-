@@ -24,9 +24,11 @@ export default function CinematicImage({
   index = 0, // eslint-disable-line no-unused-vars -- kept for API compatibility
   className = '',
   kenBurns = false,
+  fit = 'cover', // 'cover' = fill+crop; 'contain' = show whole photo over a blurred fill (no crop)
   duotone = false, // eslint-disable-line no-unused-vars -- kept for API compatibility
   children,
 }) {
+  const contain = fit === 'contain';
   return (
     <div
       className={`ci-visual relative overflow-hidden ${className}`}
@@ -35,10 +37,17 @@ export default function CinematicImage({
     >
       {src ? (
         <>
+          {contain && (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{ backgroundImage: `url(${src})`, backgroundSize: 'cover', backgroundPosition: 'center', transform: 'scale(1.18)', filter: 'blur(26px) brightness(0.5) saturate(1.1)' }}
+            />
+          )}
           <img
             src={src}
             alt={caption || label || 'Credence Innovations'}
-            className="w-full h-full object-cover ci-photo"
+            className={`relative w-full h-full ci-photo ${contain ? 'object-contain' : 'object-cover'}`}
             style={kenBurns ? { animation: 'kenburns 7s ease-out both' } : {}}
             loading="lazy"
           />

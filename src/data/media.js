@@ -86,3 +86,66 @@ export const INTERVIEWS = [
 
 /* A flat list of every photo, for any "show everything" surface */
 export const ALL_PHOTOS = [...FOUNDER, ...CREW, ...RECOGNITION, ...PEOPLE, ...CULTURE, ...FIELD];
+
+/* ============================================================
+   SOCIAL — the @credence social wall. 10 specific Instagram posts, each
+   rendered as an AUTOPLAY cover-video tile that links to its post. The cover
+   videos use the /media/video scheme keyed to each post's shortcode
+   (e.g. /media/video/DZLMuszFJW0.mp4) — drop those .mp4s in and flip
+   VIDEOS_READY to true; they then autoplay (muted) whenever a tile is in the
+   central band. `poster` is a stand-in team still shown until the cover video
+   exists. Two posts (DYpBMw4kRHF, DW65zOmlC1t) are image carousels on
+   Instagram — if there's no video cover for them, switch them to type:'image'.
+   ============================================================ */
+/* Master switches for video playback (poster placeholders shown while false).
+   VIDEOS_READY → testimonials, founder film, careers, About story (those .mp4s
+   are in /public/media/video). SOCIAL_VIDEOS_READY → the @credence social wall
+   reels (the 10 per-post reels aren't on disk yet, so this stays false to avoid
+   404s; flip it once those files are added). */
+export const VIDEOS_READY = true;
+export const SOCIAL_VIDEOS_READY = false;
+
+export const SOCIAL_URL = 'https://www.instagram.com/credenceinnovations/';
+
+const ig = (shortcode) => `https://www.instagram.com/p/${shortcode}/`;
+
+export const SOCIAL = [
+  { type: 'video', src: v('DZLMuszFJW0'), poster: f('credencecrew1'),    href: ig('DZLMuszFJW0'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DZX49gyB3CJ'), poster: f('briteam2'),         href: ig('DZX49gyB3CJ'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DYpBMw4kRHF'), poster: f('aronshivanimiami'), href: ig('DYpBMw4kRHF'), caption: 'Credence Innovations on Instagram' }, // carousel on IG
+  { type: 'video', src: v('DY0HWBChlKK'), poster: f('baylenarondeep'),   href: ig('DY0HWBChlKK'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DYFUFuoBwWd'), poster: f('cadepromo'),        href: ig('DYFUFuoBwWd'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DYAaSRSBw2m'), poster: f('dexterjanetabby'),  href: ig('DYAaSRSBw2m'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DXzomrIlMk1'), poster: f('janetabbybri'),     href: ig('DXzomrIlMk1'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DXFLhu5AX0f'), poster: f('laurenmitchfunny'), href: ig('DXFLhu5AX0f'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DXFIds4gS47'), poster: f('dinner1'),          href: ig('DXFIds4gS47'), caption: 'Credence Innovations on Instagram' },
+  { type: 'video', src: v('DW65zOmlC1t'), poster: f('beach1'),           href: ig('DW65zOmlC1t'), caption: 'Credence Innovations on Instagram' }, // carousel on IG
+];
+
+/* ============================================================
+   Categorized brand videos — real .mp4s in /public/media/video, named to
+   match the slugs below. Categories follow the client's own file labels.
+   ============================================================ */
+const clip = (name, poster, title, blurb) => ({ src: v(name), poster: f(poster), title, blurb });
+
+/* TESTIMONIAL — team members on their experience (featured + supporting, Home).
+   The first item is the FEATURED "Start here" story. `name` and `length` are
+   light, editable metadata for the cards (swap in real names/durations). */
+export const TESTIMONIAL_VIDEOS = [
+  { ...clip('lauren-before-credence', 'janetabbybri', 'Before Credence', 'What life looked like before I stepped onto the floor — and what changed.'), name: 'Lauren', length: '1:24' },
+  { ...clip('why-is-this-an-essential-service', 'briteam2', 'Why the work matters', 'The honest case for what we do every day.'), length: '0:58' },
+  { ...clip('what-is-one-habit', 'thumbsup', 'The one habit that wins', 'The small discipline behind the results.'), length: '1:06' },
+];
+
+/* FOUNDER — a word from Abby Caudill (Home, below her bio) */
+export const FOUNDER_VIDEO = clip('abby-interview-web', 'abbypaul', 'A word from our founder', 'Abby Caudill on why Credence exists — and the standard behind it.');
+
+/* CAREER — what the work is really like (grid on the Careers page) */
+export const CAREER_VIDEOS = [
+  clip('briana-interview', 'aronshivanimiami', 'Meet Briana', 'Leading a market, in her words.'),
+  clip('favorite-part-about-our-industry', 'credencecrew1', 'Our favorite part', 'The part of the job we love most.'),
+  clip('how-can-i-tell-my-parents-what-we-do', 'dexterjanetabby', 'Explaining the job', 'Putting the work into plain words.'),
+];
+
+/* ABOUT — the history of the business (About page) */
+export const ABOUT_VIDEO = clip('lauren-history-of-the-business', 'laurenmitchfunny', 'How it all started', 'Lauren on how Credence grew, from the floor up.');

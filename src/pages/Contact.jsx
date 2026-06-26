@@ -224,6 +224,58 @@ function FormSection() {
   );
 }
 
+/* ===== Our office (CREAM) — embedded Google map + the essentials, side by side ===== */
+function OfficeMap() {
+  const address = '6535 E 82nd St, Indianapolis, IN 46250';
+  const embed = `https://www.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`;
+  const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+
+  return (
+    <section className="pad-md paper">
+      <div className="shell">
+        <FadeUp>
+          <h2 className="t-display-m" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', marginBottom: 'clamp(28px, 4vw, 44px)', maxWidth: '16ch' }}>
+            Find us <span className="d-ital" style={{ color: 'var(--electric)' }}>on the map.</span>
+          </h2>
+        </FadeUp>
+
+        <div className="grid lg:grid-cols-[1.4fr_0.6fr] gap-6 lg:gap-10 items-stretch">
+          {/* map */}
+          <FadeUp>
+            <div className="relative overflow-hidden" style={{ borderRadius: 18, border: '1px solid var(--hair)', boxShadow: '0 30px 60px -34px var(--shadow-card)' }}>
+              <iframe
+                title="Credence Innovations office — 6535 E 82nd St, Indianapolis, IN"
+                src={embed}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+                style={{ border: 0, display: 'block', width: '100%', height: '100%', minHeight: 'clamp(320px, 42vh, 460px)' }}
+              />
+            </div>
+          </FadeUp>
+
+          {/* contact info */}
+          <FadeUp delay={0.08}>
+            <div className="paper-card h-full flex flex-col justify-center" style={{ padding: 'clamp(24px, 3vw, 40px)', borderRadius: 18 }}>
+              <span className="font-mono uppercase block mb-4" style={{ fontSize: 11, letterSpacing: '0.16em', color: 'var(--ember)' }}>Our office</span>
+              <h3 className="t-display-s" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', margin: '0 0 14px' }}>Castleton, Indianapolis</h3>
+              <p className="body" style={{ color: 'var(--smoke)', margin: 0 }}>6535 E 82nd St<br />Indianapolis, IN 46250</p>
+              <a href={directions} target="_blank" rel="noopener noreferrer" className="anim-link mt-6" style={{ fontFamily: 'var(--font-display)', fontSize: 18, color: 'var(--electric)' }}>
+                Get directions →
+              </a>
+              <span aria-hidden="true" style={{ height: 1, background: 'var(--hair)', margin: '24px 0' }} />
+              <span className="font-mono uppercase block mb-2" style={{ fontSize: 10.5, letterSpacing: '0.16em', color: 'var(--smoke)' }}>Email</span>
+              <a href="mailto:hr@credenceinnovations.com" className="anim-link break-words" style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(17px, 1.6vw, 21px)', color: 'var(--bone)' }}>
+                hr@credenceinnovations.com
+              </a>
+            </div>
+          </FadeUp>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Contact() {
   return (
     <>
@@ -236,6 +288,7 @@ export default function Contact() {
       />
       <Paths />
       <Direct />
+      <OfficeMap />
       <FolderTabDivider label="Partner with us" tone="ember" fill="var(--ink)" />
       <FormSection />
     </>

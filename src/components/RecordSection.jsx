@@ -27,12 +27,6 @@ const STATS = [
   { value: '450+', label: 'Reps trained', sub: 'Built, not hired', viz: 'cluster' },
 ];
 
-const TICKER = [
-  'Reps on the floor — now', 'Live in-store demos running', 'Campaigns active in 40+ cities',
-  'New market activated', 'Partner renewed', 'Trial → purchase, in the aisle',
-  'Coast-to-coast coverage', 'Built, not hired',
-];
-
 /* ---------- meaningful mini-charts ---------- */
 function Viz({ type, live, reduce, accent }) {
   const col = accent ? 'var(--ember)' : 'var(--electric)';
@@ -144,19 +138,19 @@ function Viz({ type, live, reduce, accent }) {
 export default function RecordSection() {
   const reduce = useReducedMotion();
   const ref = useRef(null);
-  const live = useInView(ref, { once: true, amount: 0.25 });
+  const live = useInView(ref, { once: true, amount: 0.2 });
 
   return (
     <section ref={ref} className="pad-md paper relative overflow-hidden">
       {/* ambient depth */}
       <div aria-hidden="true" className="pointer-events-none absolute" style={{
-        width: 'min(58vw, 700px)', height: 'min(58vw, 700px)', right: '-8%', top: '8%',
+        width: 'min(58vw, 700px)', height: 'min(58vw, 700px)', right: '-8%', top: '4%',
         background: 'radial-gradient(circle, color-mix(in srgb, var(--electric) 14%, transparent), transparent 64%)', filter: 'blur(74px)',
       }} />
 
       <div className="shell relative">
         {/* ── header ── */}
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-5 mb-10 md:mb-14">
+        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6 mb-9 md:mb-12">
           <div>
             <FadeUp>
               <span className="inline-flex items-center gap-2 mb-5">
@@ -172,47 +166,70 @@ export default function RecordSection() {
             </FadeUp>
           </div>
           <FadeUp delay={0.1}>
-            <Link to="/about" className="tab-link" style={{ ['--tab']: 'var(--ember)' }}>
-              See the full story <span className="arrow">→</span>
-            </Link>
+            <div className="flex flex-col items-start md:items-end gap-3">
+              <span className="font-mono inline-flex items-center gap-2" style={{ fontSize: 9.5, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--smoke)' }}>
+                <span className="rec-livedot" aria-hidden="true" /> Updated in real time
+              </span>
+              <Link to="/about" className="tab-link" style={{ ['--tab']: 'var(--ember)' }}>
+                See the full story <span className="arrow">→</span>
+              </Link>
+            </div>
           </FadeUp>
         </div>
 
-        {/* ── live KPI board ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        {/* ── the ledger — cardless rows, hairline dividers ── */}
+        <div className="rec-ledger">
           {STATS.map((s, i) => (
-            <FadeUp key={s.label} delay={0.05 * i}>
-              <div className="rec-tile" style={{ padding: 'clamp(18px, 2vw, 26px)' }}>
-                {/* accent edge */}
-                <span aria-hidden="true" className="absolute left-0 top-0 bottom-0" style={{ width: 2, background: s.accent ? 'var(--ember)' : 'var(--electric)', opacity: 0.55 }} />
-                <div className="flex items-center justify-between mb-3.5 gap-2">
-                  <span className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.13em', textTransform: 'uppercase', color: 'var(--smoke)', lineHeight: 1.3 }}>{s.label}</span>
-                  {s.live && <span className="rec-livedot shrink-0" aria-hidden="true" />}
-                </div>
-                <Odometer value={s.value} className="stat-num" style={{ display: 'block', fontSize: 'clamp(32px, 3.8vw, 52px)', lineHeight: 1, color: s.accent ? 'var(--ember)' : 'var(--electric)' }} />
-                <p className="font-mono mt-2" style={{ fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: s.accent ? 'var(--ember)' : 'var(--smoke)', opacity: 0.92 }}>{s.sub}</p>
-                <div className="mt-4" style={{ height: 'clamp(44px, 5vw, 58px)' }}>
-                  <Viz type={s.viz} live={live} reduce={reduce} accent={s.accent} />
-                </div>
+            <motion.div
+              key={s.label}
+              className={`rec-row group relative py-7 md:py-8 ${s.accent ? 'rec-row--accent' : ''}`}
+              initial={reduce ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-70px' }}
+              transition={{ duration: 0.7, delay: i * 0.06, ease: EXPO }}
+            >
+              {/* left accent tick (grows on hover) */}
+              <span aria-hidden="true" className="rec-tick absolute left-0 top-1/2 -translate-y-1/2" style={{ width: 3, height: '52%', borderRadius: 3, background: s.accent ? 'var(--ember)' : 'var(--electric)' }} />
+
+              {/* index */}
+              <span className="rec-idx font-mono self-center" style={{ fontSize: 12, letterSpacing: '0.06em', color: 'var(--smoke)' }}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
+
+              {/* value */}
+              <Odometer
+                value={s.value}
+                className={`rec-val stat-num ${s.accent ? 'rec-val--accent' : ''}`}
+                style={{ fontSize: 'clamp(34px, 4.6vw, 60px)', color: s.accent ? 'var(--ember)' : 'var(--electric)' }}
+              />
+
+              {/* label + sub */}
+              <div className="col-start-1 col-span-2 md:col-auto md:col-span-1">
+                <p className="d-caps" style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', letterSpacing: '0.005em', color: 'var(--bone)', lineHeight: 1.1 }}>{s.label}</p>
+                <p className="font-mono mt-1.5 inline-flex items-center gap-2" style={{ fontSize: 9.5, letterSpacing: '0.13em', textTransform: 'uppercase', color: s.accent ? 'var(--ember)' : 'var(--smoke)', opacity: 0.95 }}>
+                  {s.sub}
+                  {s.live && <span className="rec-livedot" aria-hidden="true" />}
+                </p>
               </div>
-            </FadeUp>
+
+              {/* mini-chart */}
+              <div className="rec-viz col-start-1 col-span-2 md:col-auto md:col-span-1 w-full md:justify-self-end" style={{ height: 46, maxWidth: 200 }}>
+                <Viz type={s.viz} live={live} reduce={reduce} accent={s.accent} />
+              </div>
+
+              {/* animated bottom divider */}
+              <motion.span
+                aria-hidden="true"
+                className="absolute left-0 right-0 bottom-0 origin-left"
+                style={{ height: 1, background: 'var(--hair)' }}
+                initial={reduce ? false : { scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true, margin: '-70px' }}
+                transition={{ duration: 0.9, delay: 0.12 + i * 0.06, ease: EXPO }}
+              />
+            </motion.div>
           ))}
         </div>
-
-        {/* ── live activity ticker ── */}
-        <FadeUp delay={0.1}>
-          <div className="mt-8 md:mt-10 marquee-wrap" style={{ borderTop: '1px solid var(--hair)', borderBottom: '1px solid var(--hair)', paddingBlock: 14 }}>
-            <div className="marquee-track" style={{ gap: 0 }}>
-              {[...TICKER, ...TICKER].map((item, i) => (
-                <span key={i} className="inline-flex items-center" style={{ whiteSpace: 'nowrap' }}>
-                  <span className="rounded-full" style={{ width: 5, height: 5, background: 'var(--ember)', margin: '0 14px' }} aria-hidden="true" />
-                  <span className="font-mono" style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--smoke)' }}>{item}</span>
-                  <span style={{ display: 'inline-block', width: 32 }} />
-                </span>
-              ))}
-            </div>
-          </div>
-        </FadeUp>
       </div>
     </section>
   );

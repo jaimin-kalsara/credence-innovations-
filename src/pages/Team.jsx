@@ -3,15 +3,16 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageHero from '../components/PageHero';
 import SectionHeading from '../components/SectionHeading';
-import { FadeUp, StaggerChildren, StaggerItem, ClipReveal } from '../components/AnimatedSection';
+import { ClipReveal } from '../components/AnimatedSection';
 import CinematicImage from '../components/CinematicImage';
 import EditorialFigure from '../components/EditorialFigure';
 import MagneticButton from '../components/MagneticButton';
 import FolderTabDivider from '../components/FolderTabDivider';
 import Scribble from '../components/Scribble';
 import ScrollReveal from '../components/ScrollReveal';
+import TeamNights from '../components/TeamNights';
 import { LEADERSHIP, ROSTER } from '../data/team';
-import { PEOPLE, RECOGNITION } from '../data/media';
+import { RECOGNITION } from '../data/media';
 
 /* ===== Leadership (CREAM 3-up portraits, hover reveal, links to each profile) ===== */
 function Leadership() {
@@ -87,9 +88,9 @@ function Roster() {
           titleItalic="not hired."
           subhead="Campaign managers, an analyst, and the people who run the back office. Every one trained from the floor up. Tap any face for the full story."
         />
-        <div className="row-scroll grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mt-2">
+        <div className="row-scroll grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-5 gap-y-8 lg:gap-x-6 lg:gap-y-10 mt-2">
           {ROSTER.map((p, i) => (
-            <ScrollReveal key={p.slug} from="up" distance={90} scaleFrom={1}>
+            <ScrollReveal key={p.slug} from={['left', 'up', 'right'][i % 3]} distance={80} scaleFrom={1}>
               <Link to={`/team/${p.slug}`} className="group block" style={{ textDecoration: 'none' }}>
                 <div className="relative overflow-hidden" style={{ border: '1px solid var(--hair)', borderRadius: 16 }}>
                   <img
@@ -111,70 +112,6 @@ function Roster() {
           ))}
         </div>
       </div>
-    </section>
-  );
-}
-
-/* ===== Team Nights gallery + lightbox (DARK island, mechanic preserved) ===== */
-const gallery = [...PEOPLE, ...RECOGNITION];
-
-function TeamNights() {
-  const [active, setActive] = useState(null);
-  return (
-    <section data-theme="dark" className="paper relative overflow-hidden pad-lg" style={{ background: 'var(--ink)' }}>
-      <div className="shell">
-        <SectionHeading
-          eyebrow="Team Nights"
-          title="The work day earns"
-          titleItalic="the team night."
-          subhead="Tap any frame to expand."
-        />
-      </div>
-      <div className="shell mt-2">
-        {/* masonry; reveal-once ClipReveal wipe (no kenBurns loop) */}
-        {/* slide-only (scaleFrom=1) on the static gallery wrapper — never scale-wraps the clickable items or the lightbox overlay */}
-        <ScrollReveal
-          from="up"
-          distance={110}
-          scaleFrom={1}
-          className="columns-2 md:columns-3 lg:columns-4 gap-4 [column-fill:_balance]"
-        >
-          {gallery.map((g, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: (i % 4) * 0.08 }}
-              className="mb-4 break-inside-avoid cursor-pointer"
-              onClick={() => setActive(i)}
-              data-cursor="expand"
-            >
-              <ClipReveal delay={(i % 4) * 0.06}>
-                <div style={{ border: '1px solid var(--hair)', borderRadius: 14, overflow: 'hidden' }}>
-                  <img src={g} alt="Credence team" loading="lazy" style={{ display: 'block', width: '100%', height: 'auto' }} />
-                </div>
-              </ClipReveal>
-            </motion.div>
-          ))}
-        </ScrollReveal>
-      </div>
-
-      <AnimatePresence>
-        {active !== null && (
-          <motion.div className="lightbox" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setActive(null)}>
-            <button className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-3xl z-10" style={{ color: 'var(--bone)' }} onClick={() => setActive(null)} aria-label="Close">✕</button>
-            <motion.div className="w-[90vw] max-w-4xl" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} transition={{ ease: [0.2, 0.8, 0.2, 1] }} onClick={(e) => e.stopPropagation()}>
-              <img src={gallery[active]} alt="Credence team" style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '85vh', objectFit: 'contain', borderRadius: 12 }} />
-            </motion.div>
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
-              {gallery.map((_, i) => (
-                <button key={i} onClick={(e) => { e.stopPropagation(); setActive(i); }} className="w-2 h-2 rounded-full transition-all" style={{ background: i === active ? 'var(--electric)' : 'var(--hair)' }} />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

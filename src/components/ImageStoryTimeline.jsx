@@ -14,8 +14,9 @@ const EXPO = [0.16, 1, 0.3, 1];
 
 /* the image for one milestone, with its marker (year/step) set large over the scene */
 function MilestoneImage({ item, aspect = '4 / 5' }) {
-  // src is empty until a real photo is supplied, so this shows a labelled placeholder.
-  return <CinematicImage src={item.src} label={item.marker} caption={item.heading} aspect={aspect} />;
+  // `fit="contain"` shows the whole photo (no crop) over a soft blurred fill, so a
+  // subject that sits off-center is never cropped out into empty space.
+  return <CinematicImage src={item.src} label={item.marker} caption={item.heading} aspect={aspect} fit="contain" />;
 }
 
 function Row({ item, index, active, setActive, reduce }) {
@@ -26,7 +27,7 @@ function Row({ item, index, active, setActive, reduce }) {
   useEffect(() => { if (band) setActive(index); }, [band, index, setActive]);
   const on = active === index;
   return (
-    <div ref={ref} style={{ paddingBlock: 'clamp(34px, 6vh, 76px)' }}>
+    <div ref={ref} className="ist-row">
       <motion.div
         initial={reduce ? false : { opacity: 0, y: 18 }}
         animate={(reduce || seen) ? { opacity: 1, y: 0 } : {}}
@@ -50,13 +51,29 @@ function Row({ item, index, active, setActive, reduce }) {
   );
 }
 
-export default function ImageStoryTimeline({ items = [] }) {
+export default function ImageStoryTimeline({ items = [], mobileScroll = false }) {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   const cur = items[active] || items[0];
 
   return (
     <div className={`grid gap-10 lg:gap-16 items-start ${reduce ? '' : 'lg:grid-cols-[0.92fr_1.08fr]'}`}>
+      <style>{`
+        .ist-list { border-left: 1px solid var(--hair); padding-left: clamp(1.5rem, 3vw, 2.5rem); }
+        .ist-row { padding-block: clamp(34px, 6vh, 76px); }
+        /* MOBILE (≤640px, opt-in via mobileScroll) — milestones become a
+           horizontal snap carousel of cards; desktop scrollytelling untouched. */
+        @media (max-width: 640px) {
+          .ist-list--scroll { display: flex; flex-wrap: nowrap; align-items: stretch;
+            overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch; gap: 14px; padding: 0 0 12px; border-left: 0;
+            -ms-overflow-style: none; scrollbar-width: none; }
+          .ist-list--scroll::-webkit-scrollbar { display: none; }
+          .ist-list--scroll .ist-row { flex: 0 0 82%; scroll-snap-align: start; min-width: 0;
+            padding: 16px; border: 1px solid var(--hair); border-radius: 16px;
+            background: color-mix(in srgb, var(--graphite) 55%, transparent); }
+        }
+      `}</style>
       {/* LEFT — sticky image stage that crossfades to the active milestone (desktop only) */}
       {/* decorative: the active milestone's marker/heading are conveyed by the lit row */}
       {!reduce && (
@@ -83,7 +100,7 @@ export default function ImageStoryTimeline({ items = [] }) {
       )}
 
       {/* RIGHT — the milestone list */}
-      <div className="relative" style={{ borderLeft: '1px solid var(--hair)', paddingLeft: 'clamp(1.5rem, 3vw, 2.5rem)' }}>
+      <div className={`ist-list relative ${mobileScroll ? 'ist-list--scroll' : ''}`}>
         {items.map((item, i) => (
           <Row key={i} item={item} index={i} active={active} setActive={setActive} reduce={reduce} />
         ))}

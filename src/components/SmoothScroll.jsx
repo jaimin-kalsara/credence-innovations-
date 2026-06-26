@@ -25,9 +25,9 @@ export default function SmoothScroll({ children }) {
     const lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
-      wheelMultiplier: 1,
+      wheelMultiplier: 0.7,
       touchMultiplier: 1.6,
-      syncTouch: true,
+      syncTouch: false,
     });
     lenisInstance = lenis;
     window.__lenis = lenis;

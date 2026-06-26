@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion, useInView } from 'framer-motion';
 import { FadeUp } from './AnimatedSection';
+import BrandLogo from './BrandLogo';
 
 /* ============================================================
    PARTNER VOICES — animated testimonials (brand-adapted).
@@ -59,16 +60,42 @@ export default function PartnerVoices() {
   const ref = useRef(null);
   const inView = useInView(ref, { amount: 0.3 });
 
+  // auto-advance; `active` in deps means manual nav (arrows/dots) resets the beat
   useEffect(() => {
     if (reduce || paused || !inView) return;
     const id = setInterval(() => setActive((a) => (a + 1) % n), ROTATE_MS);
     return () => clearInterval(id);
-  }, [reduce, paused, inView, n]);
+  }, [reduce, paused, inView, n, active]);
+
+  const prev = () => setActive((a) => (a - 1 + n) % n);
+  const next = () => setActive((a) => (a + 1) % n);
 
   const t = TESTIMONIALS[active];
 
   return (
     <section ref={ref} className="pad-lg paper relative overflow-hidden" style={{ paddingBottom: 'clamp(44px, 5vw, 76px)' }} aria-label="Partner voices">
+      <style>{`
+        .material-symbols-rounded {
+          font-family: 'Material Symbols Rounded'; font-weight: normal; font-style: normal;
+          line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block;
+          white-space: nowrap; word-wrap: normal; direction: ltr; font-size: 23px;
+          -webkit-font-smoothing: antialiased; font-feature-settings: 'liga';
+        }
+        /* premium round nav buttons (prev / next) */
+        .pv-nav-btn {
+          width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; flex: none;
+          color: var(--bone); cursor: none;
+          background: color-mix(in srgb, var(--graphite) 55%, transparent);
+          border: 1px solid var(--hair); box-shadow: 0 12px 28px -22px var(--shadow-card);
+          transition: background .3s ease, color .3s ease, border-color .3s ease, transform .35s var(--ease-out-quart), box-shadow .35s ease;
+        }
+        .pv-nav-btn:hover { background: var(--electric); color: #0E1618; border-color: transparent;
+          transform: translateY(-2px); box-shadow: 0 18px 36px -20px var(--glow-strong); }
+        .pv-nav-btn:active { transform: translateY(0); }
+        .pv-nav-btn:focus-visible { outline: 2px solid var(--electric); outline-offset: 3px; }
+        @media (max-width: 480px) { .pv-nav-btn { width: 42px; height: 42px; } }
+        @media (prefers-reduced-motion: reduce) { .pv-nav-btn { transition: background .2s ease, color .2s ease; } .pv-nav-btn:hover { transform: none; } }
+      `}</style>
       {/* ambient energy */}
       <div aria-hidden="true" className="pointer-events-none absolute" style={{
         width: 'min(54vw, 680px)', height: 'min(54vw, 680px)', left: '-8%', top: '6%',
@@ -106,25 +133,35 @@ export default function PartnerVoices() {
 
             {/* energetic proof + nav dots */}
             <FadeUp delay={0.16}>
-              <div className="flex items-center gap-7 mt-9">
+              <div className="flex flex-wrap items-center gap-x-7 gap-y-5 mt-9">
                 <div>
                   <span className="stat-num" style={{ fontSize: 'clamp(34px, 4vw, 50px)', lineHeight: 1, color: 'var(--electric)' }}>98%</span>
                   <p className="font-mono mt-1" style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--smoke)' }}>partners come back</p>
                 </div>
                 <span aria-hidden="true" style={{ width: 1, height: 44, background: 'var(--hair)' }} />
-                <div className="flex items-center gap-2.5" role="tablist" aria-label="Choose a testimonial">
-                  {TESTIMONIALS.map((_, i) => (
-                    <button
-                      key={i}
-                      role="tab"
-                      aria-selected={active === i}
-                      aria-label={`Testimonial ${i + 1}`}
-                      data-cursor="expand"
-                      onClick={() => setActive(i)}
-                      className="rounded-full"
-                      style={{ width: active === i ? 38 : 9, height: 9, cursor: 'none', background: active === i ? 'var(--electric)' : 'var(--hair)', transition: 'width 0.4s var(--ease-out-quart), background-color 0.4s ease' }}
-                    />
-                  ))}
+
+                {/* prev · dots · next */}
+                <div className="flex items-center gap-3.5">
+                  <button type="button" className="pv-nav-btn" onClick={prev} data-cursor="expand" aria-label="Previous testimonial">
+                    <span className="material-symbols-rounded" aria-hidden="true">arrow_back</span>
+                  </button>
+                  <div className="flex items-center gap-2.5" role="tablist" aria-label="Choose a testimonial">
+                    {TESTIMONIALS.map((_, i) => (
+                      <button
+                        key={i}
+                        role="tab"
+                        aria-selected={active === i}
+                        aria-label={`Testimonial ${i + 1}`}
+                        data-cursor="expand"
+                        onClick={() => setActive(i)}
+                        className="rounded-full"
+                        style={{ width: active === i ? 38 : 9, height: 9, cursor: 'none', background: active === i ? 'var(--electric)' : 'var(--hair)', transition: 'width 0.4s var(--ease-out-quart), background-color 0.4s ease' }}
+                      />
+                    ))}
+                  </div>
+                  <button type="button" className="pv-nav-btn" onClick={next} data-cursor="expand" aria-label="Next testimonial">
+                    <span className="material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+                  </button>
                 </div>
               </div>
             </FadeUp>
@@ -203,9 +240,9 @@ export default function PartnerVoices() {
             <p className="font-mono mb-7" style={{ fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--smoke)' }}>
               Brands we&apos;ve put on the floor
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
               {TRUSTED.map((c) => (
-                <span key={c} className="ci-brand" style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 'clamp(20px, 2.2vw, 30px)', color: 'var(--smoke)', opacity: 0.7 }}>{c}</span>
+                <BrandLogo key={c} name={c} height={26} className="brand-plate--sm" />
               ))}
             </div>
           </div>

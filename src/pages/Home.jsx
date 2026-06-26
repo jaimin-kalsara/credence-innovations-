@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+﻿import { useRef, useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { FadeUp } from '../components/AnimatedSection';
 import DrawUnderline from '../components/DrawUnderline';
 import { getMember } from '../data/team';
@@ -8,14 +8,11 @@ import SpecialtyShowcase from '../components/SpecialtyShowcase';
 import SectionHeading from '../components/SectionHeading';
 import MagneticButton from '../components/MagneticButton';
 import Odometer from '../components/Odometer';
-import RolloutScroll from '../components/RolloutScroll';
+import WorkflowJourney from '../components/WorkflowJourney';
 import CultureStory from '../components/CultureStory';
-import SplineRobot from '../components/SplineRobot';
 import SpotlightCard from '../components/SpotlightCard';
 import PartnerForm from '../components/PartnerForm';
-import FeatureRow from '../components/FeatureRow';
 import StatCard from '../components/StatCard';
-import OddCardGrid from '../components/OddCardGrid';
 import PartnerVoices from '../components/PartnerVoices';
 import PressMarquee from '../components/PressMarquee';
 import FolderTabDivider from '../components/FolderTabDivider';
@@ -24,88 +21,241 @@ import CultureGallery from '../components/CultureGallery';
 import StampBadge from '../components/StampBadge';
 import ScrollReveal from '../components/ScrollReveal';
 import { scrollToEl } from '../components/SmoothScroll';
-import FieldScroll from '../components/FieldScroll';
+import SplineRobot from '../components/SplineRobot';
+import RecognitionAlbum from '../components/RecognitionAlbum';
+import ShowreelSection from '../components/ShowreelSection';
+import SocialWall from '../components/SocialWall';
+import FollowJourney from '../components/FollowJourney';
+import FounderFilm from '../components/FounderFilm';
+import FounderSpotlight from '../components/FounderSpotlight';
+import MeetTeam from '../components/MeetTeam';
+import LatestInsights from '../components/LatestInsights';
+import { TestimonialShowcase } from '../components/VideoShowcase';
+import { TESTIMONIAL_VIDEOS } from '../data/media';
+import BrandLogo from '../components/BrandLogo';
+import { CLIENT_LOGOS, logoFor } from '../data/logos';
 
-/* ============ HERO (untouched) ============ */
+/* ============ HERO — "Coverage" ============
+   A brand-true, frameless hero: a kinetic headline that cycles through the six
+   retailers Credence operates inside, over a living "coverage map" — a hub of
+   market nodes radiating reach across a territory. Type- and SVG-driven, so it
+   arranges cleanly on every screen (no overlap, no boxes). */
+const HERO_RETAILERS = ['Walmart', 'Target', 'Costco', "Lowe's", "BJ's", "Sam's Club"];
+const HERO_STATS = [
+  { v: '450+', l: 'reps' },
+  { v: '40+', l: 'cities' },
+  { v: '99%', l: 'U.S. reach' },
+];
+
+/* word-by-word mask reveal — each word slides up from behind a clip line */
+function RevealWords({ text, className = '', style = {}, baseDelay = 0, reduce = false }) {
+  const words = text.split(' ');
+  return (
+    <span className={className} style={{ display: 'block', ...style }}>
+      {words.map((w, i) => (
+        <span
+          key={`${w}-${i}`}
+          style={{
+            display: 'inline-block', overflow: 'hidden', verticalAlign: 'bottom',
+            marginRight: '0.24em', paddingBottom: '0.14em', marginBottom: '-0.14em',
+          }}
+        >
+          <motion.span
+            style={{ display: 'inline-block' }}
+            initial={reduce ? false : { y: '118%' }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.9, delay: baseDelay + i * 0.085, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {w}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function Hero() {
   const ref = useRef(null);
+  const bgRef = useRef(null);
+  const reduce = useReducedMotion();
+  const [ri, setRi] = useState(0);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const videoY = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '34%']);
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.72], [1, 0]);
+
+  // cycle the retailer in the headline
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setRi((i) => (i + 1) % HERO_RETAILERS.length), 2200);
+    return () => clearInterval(id);
+  }, [reduce]);
+
+  // pointer parallax — eased depth on the aurora glows.
+  useEffect(() => {
+    if (reduce) return;
+    const stage = ref.current;
+    if (!stage || window.matchMedia('(pointer: coarse)').matches) return;
+    let raf = 0, tx = 0, ty = 0, cx = 0, cy = 0;
+    const loop = () => {
+      cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
+      if (bgRef.current) bgRef.current.style.transform = `translate3d(${cx * 24}px, ${cy * 24}px, 0)`;
+      if (Math.abs(tx - cx) > 0.0005 || Math.abs(ty - cy) > 0.0005) raf = requestAnimationFrame(loop);
+      else raf = 0;
+    };
+    const onMove = (e) => {
+      const r = stage.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width - 0.5;
+      ty = (e.clientY - r.top) / r.height - 0.5;
+      if (!raf) raf = requestAnimationFrame(loop);
+    };
+    stage.addEventListener('pointermove', onMove);
+    return () => { stage.removeEventListener('pointermove', onMove); if (raf) cancelAnimationFrame(raf); };
+  }, [reduce]);
 
   return (
-    <section ref={ref} className="relative min-h-svh overflow-hidden">
-      {/* parallax background — theme-aware: clean light in light mode, dark in dark mode */}
-      <motion.div className="absolute inset-0" style={{ y: videoY }}>
-        <div className="absolute inset-0" style={{ background: 'var(--ink)' }} />
-        {/* soft brand glow — subtle tint on white, ambient on dark; transform-only */}
-        <motion.div
-          aria-hidden
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: '70%', height: '70%', left: '15%', top: '16%',
-            background: 'radial-gradient(circle, rgba(68,104,122,0.20), transparent 60%)',
-            filter: 'blur(52px)', willChange: 'transform',
-          }}
-          animate={{ x: ['0%', '-12%', '0%'], y: ['0%', '10%', '0%'] }}
-          transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <div className="absolute inset-0 dot-grid opacity-30" />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 55%, var(--ink) 100%)' }} />
+    <section ref={ref} className="relative min-h-svh w-full overflow-hidden" style={{ background: 'var(--ink)' }}>
+      {/* ── aurora background — drifting brand glows + territory grid ── */}
+      <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
+        <div ref={bgRef} className="absolute will-change-transform" style={{ inset: '-6%' }}>
+          <motion.div
+            aria-hidden className="absolute rounded-full pointer-events-none"
+            style={{ width: '62%', height: '70%', left: '34%', top: '0%', background: 'radial-gradient(circle, rgba(68,104,122,0.30), transparent 62%)', filter: 'blur(64px)', willChange: 'transform' }}
+            animate={reduce ? undefined : { x: ['0%', '-8%', '0%'], y: ['0%', '8%', '0%'], scale: [1, 1.06, 1] }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            aria-hidden className="absolute rounded-full pointer-events-none"
+            style={{ width: '48%', height: '48%', right: '4%', bottom: '2%', background: 'radial-gradient(circle, rgba(232,146,60,0.18), transparent 64%)', filter: 'blur(78px)', willChange: 'transform' }}
+            animate={reduce ? undefined : { x: ['0%', '7%', '0%'], y: ['0%', '-6%', '0%'], scale: [1, 1.08, 1] }}
+            transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            aria-hidden className="absolute rounded-full pointer-events-none"
+            style={{ width: '40%', height: '44%', left: '-4%', top: '10%', background: 'radial-gradient(circle, rgba(46,74,88,0.32), transparent 66%)', filter: 'blur(82px)', willChange: 'transform' }}
+            animate={reduce ? undefined : { x: ['0%', '6%', '0%'], y: ['0%', '7%', '0%'] }}
+            transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <div className="absolute inset-0 dot-grid opacity-[0.16]" />
+        </div>
       </motion.div>
 
-      {/* content — heading + subhead on top (compact, one line), robot filling the rest */}
-      <div className="relative z-10 min-h-svh w-full flex flex-col items-center text-center px-6 md:px-12 pt-20 md:pt-24 pb-0">
-        <motion.div style={{ opacity }} className="flex flex-col items-center flex-shrink-0 max-w-[1340px]">
-          <FadeUp>
-            <h1
-              className="uppercase"
-              style={{
-                fontFamily: 'Inter, sans-serif',
-                fontWeight: 800,
-                letterSpacing: '-0.015em',
-                lineHeight: 1.0,
-                fontSize: 'clamp(22px, 4.6vw, 66px)',
-                color: 'var(--electric)',
-              }}
+      {/* ── soft bottom fade into the next section ── */}
+      <div className="absolute inset-0 z-[3] pointer-events-none" style={{ background: 'linear-gradient(180deg, transparent 64%, color-mix(in srgb, var(--ink) 36%, transparent) 88%, var(--ink) 100%)' }} />
+
+      {/* ── content + robot ──
+          mobile: stacked (text on top, robot in its own zone below — no overlap)
+          desktop: split (text left, robot bled to the right) */}
+      <div className="relative z-10 min-h-svh flex flex-col md:grid md:grid-cols-[1.05fr_0.95fr] md:items-center md:gap-6 px-6 sm:px-9 md:px-14 lg:px-24 pt-28 pb-8 md:pb-16">
+        {/* ── text column ── */}
+        <motion.div className="md:max-w-[640px]" style={{ y: contentY, opacity }}>
+          {/* the headline — big clause / small connective / kinetic retailer */}
+          <h1 style={{ fontFamily: 'var(--font-display)', lineHeight: 0.92 }}>
+            <RevealWords
+              text="Your brand,"
+              baseDelay={0.18}
+              reduce={reduce}
+              className="d-caps"
+              style={{ color: 'var(--bone)', fontWeight: 600, letterSpacing: '-0.022em', fontSize: 'clamp(38px, 6.2vw, 90px)' }}
+            />
+            <motion.span
+              className="font-mono block"
+              style={{ color: 'var(--smoke)', fontSize: 'clamp(11px, 1.1vw, 13px)', letterSpacing: '0.26em', textTransform: 'uppercase', margin: '0.7em 0 0.5em' }}
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
             >
-              Your next market is already open.
-            </h1>
-          </FadeUp>
-          <FadeUp delay={0.15}>
-            <p className="mt-3 md:mt-4 text-sm md:text-base leading-relaxed mx-auto" style={{ color: 'var(--smoke)', maxWidth: 760 }}>
-              Credence Innovations places trained brand representatives inside the country's largest
-              retailers — Walmart, Target, Costco, Lowe's, BJ's — launching and scaling Fortune 500
-              brands face-to-face.
-            </p>
-          </FadeUp>
+              on the floor of
+            </motion.span>
+            <span className="d-ital block relative" style={{ color: 'var(--electric)', fontSize: 'clamp(38px, 6.2vw, 90px)' }}>
+              <span className="sr-only">America&apos;s largest retailers.</span>
+              <span aria-hidden="true" style={{ display: 'inline-block', position: 'relative' }}>
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={HERO_RETAILERS[ri]}
+                    style={{ display: 'inline-block' }}
+                    initial={reduce ? false : { y: '44%', opacity: 0, filter: 'blur(7px)' }}
+                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                    exit={reduce ? { opacity: 0 } : { y: '-44%', opacity: 0, filter: 'blur(7px)' }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {HERO_RETAILERS[ri]}.
+                  </motion.span>
+                </AnimatePresence>
+              </span>
+            </span>
+          </h1>
+
+          <motion.p
+            className="mt-7 md:mt-9 body"
+            style={{ color: 'var(--smoke)', maxWidth: 460 }}
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.85, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            Credence deploys trained brand representatives inside America&apos;s six largest retailers —
+            launching and scaling Fortune 500 brands, face-to-face.
+          </motion.p>
+
+          <motion.div
+            className="mt-8 md:mt-10 flex flex-wrap items-center gap-4 sm:gap-5"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.95, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            <MagneticButton to="/contact">Partner With Us</MagneticButton>
+            <button
+              type="button"
+              onClick={() => scrollToEl('#ecosystem')}
+              className="tab-link"
+              style={{ ['--tab']: 'var(--ember)' }}
+            >
+              See inside the doors
+              <span className="arrow material-symbols-rounded" aria-hidden="true">arrow_forward</span>
+            </button>
+          </motion.div>
+
+          {/* inline proof line — counts, hairline-separated (no boxes) */}
+          <motion.div
+            className="mt-9 md:mt-12 flex items-center flex-wrap gap-x-5 sm:gap-x-7 gap-y-3"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.05, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            {HERO_STATS.map((s, i) => (
+              <span key={s.l} className="flex items-center gap-x-5 sm:gap-x-7">
+                {i > 0 && <span aria-hidden="true" style={{ width: 1, height: 24, background: 'var(--hair)' }} />}
+                <span className="flex items-baseline gap-2">
+                  <span className="stat-num leading-none" style={{ fontSize: 'clamp(22px, 2.4vw, 30px)' }}><Odometer value={s.v} /></span>
+                  <span className="font-mono" style={{ fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--smoke)' }}>{s.l}</span>
+                </span>
+              </span>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* interactive 3D robot — enlarged and bled slightly past the edges so it
-            dominates the viewport like the reference (cropped by overflow-hidden) */}
-        <motion.div className="relative w-full flex-1 min-h-[52svh]" style={{ opacity }}>
+        {/* ── interactive 3D robot — its own zone (below on mobile, right on desktop) ──
+            On mobile it bleeds to the screen edges and takes a generous ~50svh so it
+            reads clearly; on desktop it fills the right column and bleeds off-edge.
+            Outer carries the scroll-fade; inner carries the mount fade/scale, so the
+            two opacities multiply instead of fighting over the same property. */}
+        <motion.div
+          className="relative w-full flex-1 min-h-[46svh] mt-2 md:mt-0 md:min-h-0 md:h-[80vh] md:-mr-[3%] lg:-mr-[8%] pointer-events-none md:pointer-events-auto"
+          style={{ opacity }}
+        >
+          {/* absolute inset-0 fills the flex parent reliably — a percentage
+              height (h-full) would collapse to 0 here because the flex parent
+              has no explicit height on mobile, hiding the robot. */}
           <motion.div
-            className="absolute"
-            style={{ top: 0, bottom: '-12%', left: '-8%', right: '-8%' }}
-            initial={{ opacity: 0, scale: 0.94 }}
+            className="absolute inset-0"
+            initial={reduce ? false : { opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={{ duration: 1.1, delay: 0.3, ease: [0.2, 0.8, 0.2, 1] }}
           >
-            <SplineRobot maxWidth={1500} fill />
+            <SplineRobot maxWidth={1100} fill />
           </motion.div>
         </motion.div>
       </div>
-
-      {/* scroll cue (anchored to the first viewport, lower-left) */}
-      <motion.button
-        onClick={() => scrollToEl('#ecosystem')}
-        className="absolute bottom-6 left-6 md:left-10 z-20 w-12 h-12 rounded-full flex items-center justify-center"
-        style={{ border: '1px solid var(--divider)', background: 'var(--chip-bg)', backdropFilter: 'blur(6px)', color: 'var(--bone)' }}
-        whileHover={{ scale: 1.1, borderColor: 'var(--electric)', color: 'var(--electric)' }}
-        aria-label="Scroll to explore"
-      >
-        <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}>↓</motion.span>
-      </motion.button>
     </section>
   );
 }
@@ -117,15 +267,15 @@ const RACK = [
   { name: 'Costco', count: '600+', unit: 'warehouses', note: 'High-intent members, high basket size.' },
   { name: "Lowe's", count: '1,700+', unit: 'stores', note: 'Project buyers for home and service brands.' },
   { name: "BJ's", count: '240+', unit: 'clubs', note: 'Loyal value-club households, East-Coast strong.' },
+  { name: "Sam's Club", count: '600+', unit: 'clubs', note: 'Member-first warehouse shoppers, nationwide reach.' },
 ];
-const REP_BRANDS = ['AT&T', 'Apple', 'LeafFilter', 'Just Energy'];
 
 function EcosystemBar() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
 
   return (
-    <section id="ecosystem" data-theme="dark" className="paper relative overflow-hidden pad-lg" style={{ background: 'var(--ink)' }}>
+    <section id="ecosystem" data-theme="dark" className="paper relative overflow-hidden pad-md" style={{ background: 'var(--ink)' }}>
       <div className="shell">
 
         {/* BAND 1 — mixed headline + 99% keystone StatCard */}
@@ -138,9 +288,9 @@ function EcosystemBar() {
               <h2 className="t-display-l" style={{ fontFamily: 'var(--font-display)', color: 'var(--bone)', maxWidth: 900 }}>
                 The only marketing partner operating inside{' '}
                 <span className="d-ital" style={{ color: 'var(--electric)' }}>
-                  <DrawUnderline color="var(--electric)">all five</DrawUnderline>
+                  <DrawUnderline color="var(--electric)">all six</DrawUnderline>
                 </span>{' '}
-                of America's largest big-box retailers.
+                of America&apos;s largest big-box retailers.
               </h2>
             </FadeUp>
           </ScrollReveal>
@@ -171,7 +321,15 @@ function EcosystemBar() {
                 >
                   <SpotlightCard
                     className="paper-card relative overflow-hidden"
-                    style={{ height: 'clamp(260px, 34vw, 360px)', borderRadius: 14 }}
+                    style={{
+                      height: 'clamp(260px, 34vw, 360px)', borderRadius: 16,
+                      background: 'linear-gradient(158deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015) 44%, transparent 72%), linear-gradient(158deg, #1c272e 0%, #161f25 100%)',
+                      border: open ? '1px solid color-mix(in srgb, var(--electric) 42%, rgba(255,255,255,0.11))' : '1px solid rgba(255,255,255,0.11)',
+                      boxShadow: open
+                        ? '0 44px 92px -48px rgba(0,0,0,0.85), 0 0 0 1px color-mix(in srgb, var(--electric) 24%, transparent), 0 28px 72px -30px color-mix(in srgb, var(--electric) 40%, transparent), inset 0 1px 0 rgba(255,255,255,0.08)'
+                        : '0 28px 60px -40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)',
+                      transition: 'border-color 0.5s ease, box-shadow 0.5s ease',
+                    }}
                   >
                     <div className="relative h-full p-5 md:p-7">
                       <span className="font-mono text-[11px] tracking-[0.22em]" style={{ color: open ? 'var(--electric)' : 'var(--smoke)' }}>
@@ -196,6 +354,7 @@ function EcosystemBar() {
                         transition={reduce ? { duration: 0 } : { duration: 0.4, delay: open ? 0.12 : 0 }}
                         style={{ pointerEvents: open ? 'auto' : 'none' }}
                       >
+                        {logoFor(r.name) && <BrandLogo name={r.name} height={28} className="brand-plate--sm" fallback="hide" style={{ marginBottom: 14 }} />}
                         <h3 className="d-caps text-xl md:text-2xl mb-2.5" style={{ color: 'var(--bone)' }}>{r.name}</h3>
                         <div className="stat-num leading-none" style={{ fontSize: 'clamp(30px, 3.2vw, 42px)' }}>
                           {open && <Odometer value={r.count} />}
@@ -214,8 +373,13 @@ function EcosystemBar() {
         {/* BAND 2 — tablet/mobile / reduced-motion fallback (fully revealed stack) */}
         <div className="lg:hidden flex flex-col gap-3">
           {RACK.map((r, i) => (
-            <div key={r.name} className="paper-card flex items-start justify-between gap-4 p-5" style={{ borderRadius: 14 }}>
+            <div key={r.name} className="paper-card flex items-start justify-between gap-4 p-5" style={{ borderRadius: 16, background: 'linear-gradient(158deg, rgba(255,255,255,0.06), transparent 60%), linear-gradient(158deg, #1c272e, #161f25)', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div className="min-w-0">
+                {logoFor(r.name) && (
+                  <div style={{ marginBottom: 10 }}>
+                    <BrandLogo name={r.name} height={22} className="brand-plate--sm" fallback="hide" />
+                  </div>
+                )}
                 <span className="font-mono text-[10px] tracking-[0.2em] mr-2 align-middle" style={{ color: 'var(--electric)' }}>0{i + 1}</span>
                 <h3 className="d-caps text-xl inline align-middle" style={{ color: 'var(--bone)' }}>{r.name}</h3>
                 <p className="text-xs mt-2" style={{ color: 'var(--smoke)' }}>{r.note}</p>
@@ -231,128 +395,21 @@ function EcosystemBar() {
 
       {/* BAND 3 — brands as a small infinite-scrolling banner */}
       <div className="mt-14 md:mt-20">
-        <PressMarquee label="Brands we represent" items={REP_BRANDS} speed={26} />
+        <PressMarquee label="Brands we represent" items={CLIENT_LOGOS} speed={26} />
       </div>
     </section>
   );
 }
 
-/* ============ 4-STEP (accent island frame) ============ */
+/* ============ "How we work" — zig-zag pinned process cards (WorkflowJourney
+   owns its own section, background, header, cards and CTA). ============ */
 function ModelSection() {
-  return (
-    <section className="island-accent relative">
-      <div className="shell pad-md" style={{ paddingBottom: 0 }}>
-        <SectionHeading
-          eyebrow="How we work"
-          title="From one store to every state —"
-          titleItalic="a proven four-stage rollout."
-          align="center"
-          maxWidth={900}
-        />
-      </div>
-      <RolloutScroll />
-      <div className="shell text-center" style={{ paddingBottom: 'clamp(56px, 9vw, 130px)' }}>
-        <MagneticButton variant="outline" to="/what-we-do">See the full model</MagneticButton>
-      </div>
-    </section>
-  );
+  return <WorkflowJourney />;
 }
 
 /* "The Record" now lives in its own component — an animated growth curve
    + an open, box-free ledger. See components/RecordSection.jsx. */
 
-/* ============ FOUNDER — minimal, quote-led spotlight ============ */
-function Founder() {
-  // achievements pulled from Abby's profile (single source of truth in data/team.js)
-  const awards = getMember('abby-caudill')?.awards ?? [];
-
-  return (
-    <section className="pad-md paper relative overflow-hidden">
-      {/* ambient depth */}
-      <div aria-hidden="true" className="pointer-events-none absolute" style={{
-        width: 'min(52vw, 640px)', height: 'min(52vw, 640px)', left: '-6%', top: '14%',
-        background: 'radial-gradient(circle, color-mix(in srgb, var(--electric) 14%, transparent), transparent 64%)', filter: 'blur(72px)',
-      }} />
-
-      <div className="shell relative">
-        <div className="grid lg:grid-cols-[0.82fr_1.18fr] gap-12 lg:gap-20 items-center">
-
-          {/* ── portrait ── */}
-          <ScrollReveal from="left" distance={120} className="relative order-1">
-            <div className="relative">
-              <EditorialFigure src="/team/abby-caudill.png" label="Founder · Abby Caudill" aspect="4/5" index={1} />
-
-              {/* floating glass label */}
-              <div className="absolute" style={{ top: 16, left: -14, zIndex: 3 }}>
-                <span className="flex items-center gap-2 rounded-full px-3.5 py-2" style={{
-                  background: 'color-mix(in srgb, var(--graphite) 80%, transparent)', border: '1px solid var(--hair)',
-                  backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', boxShadow: '0 14px 30px -20px var(--shadow-card)',
-                }}>
-                  <span className="rounded-full" style={{ width: 6, height: 6, background: 'var(--ember)' }} />
-                  <span className="font-mono" style={{ fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--bone)' }}>Founder &amp; Operator</span>
-                </span>
-              </div>
-
-              {/* rubber stamp */}
-              <div className="absolute" style={{ right: -14, bottom: 22, zIndex: 2 }} aria-hidden="true">
-                <StampBadge topText="TEN YEARS" bottomText="ZERO FAILED" center="EST '16" color="var(--ember)" size={104} rotate={-9} />
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* ── text (minimal, quote-led) ── */}
-          <div className="order-2">
-            <FadeUp><span className="eyebrow block mb-7">The founder</span></FadeUp>
-
-            <FadeUp delay={0.05}>
-              <blockquote className="t-display-l" style={{ fontFamily: 'var(--font-display)', fontStyle: 'italic', color: 'var(--bone)', lineHeight: 1.18, maxWidth: '17ch' }}>
-                <span aria-hidden="true" style={{ color: 'var(--ember)', fontSize: '1.5em', lineHeight: 0, marginRight: 2 }}>&ldquo;</span>
-                Build the team you&apos;d send to your <DrawUnderline color="var(--electric)"><span style={{ color: 'var(--electric)' }}>own customers.</span></DrawUnderline>
-              </blockquote>
-            </FadeUp>
-
-            {/* attribution */}
-            <FadeUp delay={0.12}>
-              <div className="flex items-center gap-4 mt-8">
-                <span style={{ width: 34, height: 1, background: 'var(--hair)' }} aria-hidden="true" />
-                <div>
-                  <p style={{ fontFamily: 'var(--font-display)', fontWeight: 600, color: 'var(--bone)', fontSize: 'clamp(19px, 1.9vw, 24px)', lineHeight: 1.1 }}>Abby Caudill</p>
-                  <p className="font-mono mt-1" style={{ fontSize: 10.5, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--smoke)' }}>Founder · On the floor since 2016</p>
-                </div>
-              </div>
-            </FadeUp>
-
-            {/* achievements — pulled from Abby's profile */}
-            <FadeUp delay={0.18}>
-              <div className="mt-9">
-                <p className="font-mono mb-4" style={{ fontSize: 10.5, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ember)' }}>Recognition</p>
-                <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
-                  {awards.map((a) => (
-                    <li key={a} className="flex items-start gap-3">
-                      <span className="grid place-items-center shrink-0 rounded-full" style={{ width: 30, height: 30, marginTop: 1, background: 'var(--brand-soft)', border: '1px solid var(--hair)' }}>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ember)" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                          <circle cx="12" cy="9" r="5" /><path d="M8.5 13.4 L7 21 l5-2.6 5 2.6 -1.5-7.6" />
-                        </svg>
-                      </span>
-                      <span className="body-sm" style={{ color: 'var(--bone)', lineHeight: 1.35 }}>{a}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeUp>
-
-            {/* CTA → opens the founder's full profile on the Team page */}
-            <FadeUp delay={0.24}>
-              <div className="mt-10 pt-8" style={{ borderTop: '1px solid var(--hair)' }}>
-                <MagneticButton to="/team/abby-caudill">View Abby&apos;s full profile</MagneticButton>
-              </div>
-            </FadeUp>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* "Partner Voices" now lives in its own component — animated testimonials
    (after-content only). See components/PartnerVoices.jsx. */
@@ -456,22 +513,40 @@ function CTASection() {
 /* "Team Culture" now lives in its own component — a value-by-value scroll
    story ("Built, not hired"). See components/CultureStory.jsx. */
 
+
+/* ===== Team testimonials — cinematic dark island; the component owns its own
+   section, background, heading and the three-video composition. ===== */
+function TeamTestimonials() {
+  return <TestimonialShowcase items={TESTIMONIAL_VIDEOS} />;
+}
+
 export default function Home() {
   return (
     <>
       <Hero />
       <FolderTabDivider label="Inside the doors" tone="electric" fill="var(--ink)" />
       <EcosystemBar />
-      <SpecialtyShowcase />
+      <ShowreelSection />
       <ModelSection />
       <RecordSection />
-      <Founder />
-      <FolderTabDivider label="In the field" tone="electric" fill="var(--ink)" />
-      <FieldScroll />
+      <FounderSpotlight />
+      <FounderFilm />
+      <MeetTeam />
+      <FolderTabDivider label="Recognition" tone="ember" fill="var(--ink)" />
+      <RecognitionAlbum />
       <PartnerVoices />
       <CultureStory />
+      <FolderTabDivider label="From the team" tone="electric" fill="var(--ink)" />
+      <TeamTestimonials />
+      <FolderTabDivider label="Our services" tone="electric" fill="var(--ink)" />
+      <SpecialtyShowcase />
       <FolderTabDivider label="Partner with us" tone="ember" fill="var(--ink)" />
       <CTASection />
+      <FolderTabDivider label="Follow along" tone="electric" fill="var(--ink)" />
+      <SocialWall />
+      <FollowJourney />
+      <FolderTabDivider label="Latest insights" tone="ember" fill="var(--ink)" />
+      <LatestInsights />
     </>
   );
 }
